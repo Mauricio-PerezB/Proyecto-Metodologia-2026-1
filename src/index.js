@@ -7,10 +7,9 @@ import { routerApi } from "./routes/index.routes.js";
 const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
-// Ruta principal de bienvenida
-app.get("/", (req, res) => {
-  res.send("¡Bienvenido a mi API REST con TypeORM!");
-});
+
+// Servir archivos estáticos
+app.use(express.static("public"));
 
 // Inicializa la conexión a la base de datos
 connectDB()

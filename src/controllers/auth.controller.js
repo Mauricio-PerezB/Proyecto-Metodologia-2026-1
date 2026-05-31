@@ -1,5 +1,5 @@
 import { loginUser } from "../services/auth.service.js";
-import { createUser } from "../services/user.service.js";
+import { createUser, findUsers } from "../services/user.service.js";
 import { handleSuccess, handleErrorClient, handleErrorServer } from "../Handlers/responseHandlers.js";
 
 export async function login(req, res) {
@@ -34,5 +34,18 @@ export async function register(req, res) {
     } else {
       handleErrorServer(res, 500, "Error interno del servidor", error.message);
     }
+  }
+}
+
+export async function getUsers(req, res) {
+  try {
+    const users = await findUsers();
+    const safeUsers = users.map(u => {
+      const { password, ...rest } = u;
+      return rest;
+    });
+    handleSuccess(res, 200, "Usuarios obtenidos exitosamente", safeUsers);
+  } catch (error) {
+    handleErrorServer(res, 500, "Error al obtener usuarios", error.message);
   }
 }
