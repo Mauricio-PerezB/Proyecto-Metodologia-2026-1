@@ -1,44 +1,48 @@
 import { EntitySchema } from "typeorm";
 
-export const User = new EntitySchema({
-  name: "User",
-  tableName: "users",
+export const PreRegistro = new EntitySchema({
+  name: "PreRegistro",
+  tableName: "pre_registros",
   columns: {
     id: {
       primary: true,
       type: "int",
       generated: "increment",
     },
-    email: {
-      type: "varchar",
-      length: 255,
-      unique: true,
-      nullable: false,
-    },
-    password: {
+    nombreCompleto: {
       type: "varchar",
       length: 255,
       nullable: false,
-    },
-    role: {
-      type: "varchar",
-      length: 50,
-      default: "Alumno",
     },
     rut: {
       type: "varchar",
       length: 20,
-      nullable: true,
+      nullable: false,
     },
-    phone: {
+    telefono: {
       type: "varchar",
       length: 20,
-      nullable: true,
+      nullable: false,
     },
-    campus: {
+    sede: {
       type: "varchar",
       length: 100,
-      nullable: true,
+      nullable: false,
+    },
+    plan: {
+      type: "varchar",
+      length: 100,
+      nullable: false,
+    },
+    comprobantePagoUrl: {
+      type: "varchar",
+      length: 500,
+      nullable: false,
+    },
+    estado: {
+      type: "varchar",
+      length: 20,
+      default: "pendiente", // pendiente, aceptado, rechazado
     },
     created_at: {
       type: "timestamp",
