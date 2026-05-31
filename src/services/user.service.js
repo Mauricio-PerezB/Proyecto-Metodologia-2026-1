@@ -18,3 +18,7 @@ export async function createUser(data) {
 export async function findUserByEmail(email) {
   return await userRepository.findOneBy({ email });
 }
+
+export async function findUsers() {
+  return await userRepository.find();
+}
