@@ -81,7 +81,7 @@ export async function programarExamenService(data) {
     );
   }
 
-  // Crear y guardar el examen con estado inicial "Pendiente"
+  // Crear y guardar el examen con estado inicial pendiente
   const nuevoExamen = examenRepo.create({
     vehiculoId,
     fechaHoraInicio: inicio,
