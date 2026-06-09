@@ -1,7 +1,7 @@
 import { AppDataSource } from "../config/configDB.js";
 import { PreRegistro } from "../entities/preregistro.entity.js";
 import { User } from "../entities/user.entity.js";
-import bcryptjs from "bcryptjs";
+import bcrypt from "bcrypt";
 
 export async function crearPreRegistro(data) {
   const repository = AppDataSource.getRepository(PreRegistro);
@@ -34,7 +34,7 @@ export async function aprobarPreRegistro(id) {
   await preRegistroRepo.save(preRegistro);
 
   // Crear usuario Alumno
-  const generatedPassword = await bcryptjs.hash(preRegistro.rut, 10); // usar rut como pass inicial
+  const generatedPassword = await bcrypt.hash(preRegistro.rut, 10); // usar rut como pass inicial
   // Email generado para evitar nulos ya que email es unique y requerido
   const email = `${preRegistro.rut.replace(/[^a-zA-Z0-9]/g, "")}@escuela.cl`;
 
