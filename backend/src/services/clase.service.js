@@ -11,14 +11,30 @@ export async function crearClase(data) {
   
   if (!descripcion) throw new Error("La descripción es obligatoria.");
   if (!tipo) throw new Error("El tipo de clase es obligatorio.");
-  if (!fechaHoraInicio || !fechaHoraFin) throw new Error("Los horarios de inicio y término son obligatorios.");
-  if (!docenteId) throw new Error("El docente es obligatorio.");
-  if (!alumnoIds || !Array.isArray(alumnoIds) || alumnoIds.length === 0) {
-    throw new Error("Se debe asignar al menos un alumno.");
+
+  let finalDocenteId = docenteId;
+  if (!finalDocenteId && data.email_profesor) {
+    const docenteUser = await userRepo.findOne({ where: { email: data.email_profesor } });
+    if (docenteUser) {
+      finalDocenteId = docenteUser.id;
+    }
   }
 
-  const inicio = new Date(fechaHoraInicio);
-  const fin = new Date(fechaHoraFin);
+  if (!finalDocenteId) throw new Error("El docente es obligatorio.");
+
+  let startStr = fechaHoraInicio;
+  let endStr = fechaHoraFin;
+  if (!startStr && data.fecha_clase && data.hora_inicio) {
+    startStr = `${data.fecha_clase}T${data.hora_inicio}:00`;
+  }
+  if (!endStr && data.fecha_clase && data.hora_fin) {
+    endStr = `${data.fecha_clase}T${data.hora_fin}:00`;
+  }
+
+  if (!startStr || !endStr) throw new Error("Los horarios de inicio y término son obligatorios.");
+
+  const inicio = new Date(startStr);
+  const fin = new Date(endStr);
   if (isNaN(inicio.getTime()) || isNaN(fin.getTime())) {
     throw new Error("Formato de fecha inválido.");
   }
@@ -26,20 +42,23 @@ export async function crearClase(data) {
     throw new Error("La fecha/hora de inicio debe ser anterior a la de término.");
   }
 
-  const docente = await userRepo.findOne({ where: { id: parseInt(docenteId) } });
+  const docente = await userRepo.findOne({ where: { id: parseInt(finalDocenteId) } });
   if (!docente) {
-    throw new Error(`El docente con ID ${docenteId} no está registrado en el sistema.`);
+    throw new Error(`El docente con ID ${finalDocenteId} no está registrado en el sistema.`);
   }
 
-  const alumnosIdsNumeros = alumnoIds.map(id => parseInt(id));
-  const alumnos = await userRepo.find({
-    where: { id: In(alumnosIdsNumeros) }
-  });
+  const alumnosIdsNumeros = (alumnoIds && Array.isArray(alumnoIds)) ? alumnoIds.map(id => parseInt(id)) : [];
+  let alumnos = [];
+  if (alumnosIdsNumeros.length > 0) {
+    alumnos = await userRepo.find({
+      where: { id: In(alumnosIdsNumeros) }
+    });
 
-  if (alumnos.length !== alumnosIdsNumeros.length) {
-    const encontradosIds = alumnos.map(a => a.id);
-    const faltantes = alumnosIdsNumeros.filter(id => !encontradosIds.includes(id));
-    throw new Error(`Los siguientes alumnos no están registrados en el sistema: ${faltantes.join(", ")}`);
+    if (alumnos.length !== alumnosIdsNumeros.length) {
+      const encontradosIds = alumnos.map(a => a.id);
+      const faltantes = alumnosIdsNumeros.filter(id => !encontradosIds.includes(id));
+      throw new Error(`Los siguientes alumnos no están registrados en el sistema: ${faltantes.join(", ")}`);
+    }
   }
 
   const tipoClaseNormalizado = tipo.toLowerCase().trim();

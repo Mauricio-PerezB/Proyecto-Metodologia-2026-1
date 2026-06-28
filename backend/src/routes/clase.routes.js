@@ -4,6 +4,7 @@ import { crearClaseController, obtenerClasesController } from "../controllers/cl
 const router = Router();
 
 router.post("/", crearClaseController);
+router.post("/crear", crearClaseController);
 router.get("/", obtenerClasesController);
 
 export default router;
