@@ -6,6 +6,7 @@ import claseRoutes from "./clase.routes.js";
 import userRoutes from "./user.routes.js";
 import mantenimientoRoutes from './mantenimiento.routes.js';
 import examenRoutes from './examen.routes.js';
+import alumnoRoutes from "./alumno.routes.js";
 
 export function routerApi(app) {
   const router = Router();
@@ -18,5 +19,6 @@ export function routerApi(app) {
   router.use("/users", userRoutes);
   router.use("/mantenimiento", mantenimientoRoutes);
   router.use("/examenes", examenRoutes);
+  router.use("/alumnos", alumnoRoutes);
 }
 
