@@ -57,16 +57,21 @@ export default function Home() {
           <div className="relative z-10">
             <div className="inline-flex items-center space-x-2 bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full font-medium text-sm mb-6">
               <span className="animate-pulse w-2 h-2 rounded-full bg-emerald-500"></span>
-              <span>Portal del Alumno</span>
+              <span>
+                {user?.rol === 'secretario' ? 'Portal de Secretaría' : 
+                 user?.rol === 'profesor' ? 'Portal del Profesor' : 
+                 'Portal del Alumno'}
+              </span>
             </div>
             
             <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
-              {getGreeting()}, <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">{user?.nombre}</span>
+              {getGreeting()}, <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">{user?.nombre || user?.email?.split('@')[0]}</span>
             </h1>
             
             <p className="text-lg text-slate-600 max-w-2xl leading-relaxed">
-              Te damos la bienvenida a tu panel de control del curso de conducción. 
-              Aquí podrás gestionar tus clases, revisar tu progreso y mantenerte al día con tus evaluaciones.
+              {user?.rol === 'secretario' ? 'Te damos la bienvenida al panel de administración. Aquí podrás gestionar preinscripciones, administrar recursos y coordinar el funcionamiento general.' : 
+               user?.rol === 'profesor' ? 'Te damos la bienvenida a tu panel de gestión académica. Aquí podrás organizar tus clases, registrar asistencias y monitorear a tus alumnos.' : 
+               'Te damos la bienvenida a tu panel de control del curso de conducción. Aquí podrás gestionar tus clases, revisar tu progreso y mantenerte al día.'}
             </p>
           </div>
         </div>
@@ -97,10 +102,10 @@ export default function Home() {
             <div className="overflow-hidden">
               <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Tu perfil</h3>
               <p className="text-lg font-bold text-slate-800 truncate">
-                {user?.nombre}
+                {user?.nombre || user?.email?.split('@')[0]}
               </p>
               <p className="text-emerald-600 font-semibold capitalize text-sm">
-                {user?.rol}
+                {user?.rol || 'Usuario'}
               </p>
               <p className="text-slate-500 text-xs mt-1 truncate">
                 {user?.email}
@@ -111,15 +116,25 @@ export default function Home() {
           {/* Card Próxima Acción */}
           <div className="bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl shadow-lg shadow-emerald-200 border border-emerald-500 p-6 flex flex-col justify-between text-white transition-transform hover:-translate-y-1 duration-300 md:col-span-2 lg:col-span-1">
             <div>
-              <h3 className="text-emerald-100 font-medium mb-1">Estado del curso</h3>
-              <p className="text-2xl font-bold tracking-tight mb-2">Activo</p>
+              <h3 className="text-emerald-100 font-medium mb-1">
+                {user?.rol === 'secretario' ? 'Panel de Secretaría' : 
+                 user?.rol === 'profesor' ? 'Agenda de Clases' : 
+                 'Estado del curso'}
+              </h3>
+              <p className="text-2xl font-bold tracking-tight mb-2">
+                {user?.rol === 'secretario' ? 'Al día' : 
+                 user?.rol === 'profesor' ? 'Activa' : 
+                 'Activo'}
+              </p>
               <p className="text-emerald-50/80 text-sm leading-relaxed">
-                Revisa tu calendario para conocer tus próximas clases prácticas y teóricas.
+                {user?.rol === 'secretario' ? 'Revisa y gestiona las nuevas solicitudes de preinscripción.' : 
+                 user?.rol === 'profesor' ? 'Revisa tu calendario para conocer tus próximas clases.' : 
+                 'Revisa tu calendario para conocer tus próximas clases prácticas y teóricas.'}
               </p>
             </div>
             <div className="mt-6 flex justify-end">
               <button className="px-5 py-2.5 bg-white text-emerald-700 font-bold rounded-xl text-sm hover:bg-emerald-50 transition-colors shadow-sm">
-                Ver Clases
+                {user?.rol === 'secretario' ? 'Ver Preinscripciones' : 'Ver Clases'}
               </button>
             </div>
           </div>

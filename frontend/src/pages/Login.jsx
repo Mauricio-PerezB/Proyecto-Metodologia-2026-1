@@ -102,8 +102,14 @@ const Login = () => {
             const response = await login(formData);
             if (response.status === 'Success') {
                 navigate('/home');
-            } else if (response.status === 'Client error') {
-                errorData(response.details);
+            } else {
+                const errorMsg = response.message || response.details || 'Error desconocido al iniciar sesión';
+                if (errorMsg.includes('Credenciales')) {
+                    setErrors({ email: errorMsg, password: errorMsg });
+                } else {
+                    alert(errorMsg);
+                }
+                errorData(errorMsg);
             }
         } catch (error) {
             console.log(error);
