@@ -1,20 +1,25 @@
 import "dotenv/config";
 import express from "express";
 import morgan from "morgan";
+import cors from "cors";
 import { AppDataSource, connectDB } from "./config/configDB.js";
 import { routerApi } from "./routes/index.routes.js";
+import { iniciarUsuarios } from "./config/initialSetup.js";
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
-// Ruta principal de bienvenida
-app.get("/", (req, res) => {
-  res.send("¡Bienvenido a mi API REST con TypeORM!");
-});
+
+// Servir archivos estáticos
+app.use(express.static("public"));
 
 // Inicializa la conexión a la base de datos
 connectDB()
-  .then(() => {
+  .then(async () => {
+    // Carga usuarios iniciales
+    await iniciarUsuarios();
+
     // Carga todas las rutas de la aplicación
     routerApi(app);
 
