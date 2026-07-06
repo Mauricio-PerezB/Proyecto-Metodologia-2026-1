@@ -3,131 +3,647 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de Clases de Conducción - Escuela de Manejo</title>
+  <title>DriveControl Pro - Sistema de Gestión de Escuela de Conducción</title>
+  
+  <!-- Fonts & Stylesheet -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="background-decor"></div>
-  <div class="background-decor-2"></div>
   
-  <div class="app-container">
-    <header class="app-header">
-      <div class="logo">
-        <span class="icon">🚗</span>
-        <h1>DriveControl</h1>
+  <!-- Background Decorations -->
+  <div class="bg-gradient-overlay"></div>
+  
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="brand-section">
+        <span class="brand-logo">🚗</span>
+        <span class="brand-name">DriveControl</span>
       </div>
-      <p class="subtitle">Panel de Control de la Secretaría - Calendario de Clases</p>
-    </header>
-
-    <main class="dashboard-grid">
-      <!-- Sección del Formulario -->
-      <section class="card glass-card form-section">
-        <div class="card-header">
-          <h2>📅 Programar Nueva Sesión</h2>
-          <p>Complete los datos de la clase. Se validará que docentes y alumnos estén previamente inscritos.</p>
+      
+      <nav class="sidebar-menu">
+        <div class="menu-item active" data-target="dashboardSection">
+          <span class="menu-icon">📊</span>
+          <span>Panel de Inicio</span>
         </div>
         
-        <form id="classForm" class="interactive-form">
-          <div class="form-group">
-            <label for="descripcion">Descripción de la Sesión</label>
-            <input type="text" id="descripcion" name="descripcion" placeholder="Ej: Clase práctica de estacionamiento en reversa" required>
-          </div>
+        <div class="menu-item" data-target="clasesSection">
+          <span class="menu-icon">📅</span>
+          <span>Calendario y Clases</span>
+        </div>
+        
+        <div class="menu-item" data-target="preinscripcionesSection">
+          <span class="menu-icon">✍️</span>
+          <span>Preinscripciones</span>
+        </div>
+        
+        <div class="menu-item" data-target="vehiculosSection">
+          <span class="menu-icon">🔧</span>
+          <span>Flota y Taller</span>
+        </div>
+        
+        <div class="menu-item" data-target="perfilSection">
+          <span class="menu-icon">👤</span>
+          <span>Mi Cuenta</span>
+        </div>
+      </nav>
+    </div>
+    
+    <!-- User Session Widget -->
+    <div class="user-widget" id="userWidget">
+      <div class="user-info">
+        <div class="user-avatar" id="widgetAvatar">?</div>
+        <div class="user-details">
+          <span class="user-name" id="widgetName">Cargando...</span>
+          <span class="user-role-badge" id="widgetRole">Invitado</span>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn" style="display: none;">
+        <span>🚪</span>
+        <span>Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label for="tipo">Tipo de Clase</label>
-              <select id="tipo" name="tipo" required>
-                <option value="" disabled selected>Seleccione modalidad...</option>
-                <option value="Práctica">🚗 Práctica (Requiere Vehículo)</option>
-                <option value="Teórica">📖 Teórica (Asignación Masiva)</option>
-              </select>
+  <!-- Main Content Area -->
+  <main class="main-content">
+    
+    <!-- Top Header -->
+    <header class="header-container">
+      <div class="header-title">
+        <h2 id="pageTitle">Panel de Inicio</h2>
+        <p id="pageSubtitle">Resumen general y avisos de la escuela de manejo</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn-menu-toggle" id="menuToggleBtn">
+          <span>☰</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- SECTION 1: DASHBOARD OVERVIEW -->
+    <section id="dashboardSection" class="content-section active-section">
+      
+      <!-- Metrics Row -->
+      <div class="metrics-grid">
+        <div class="glass-card metric-card blue">
+          <div class="metric-icon-wrapper">📅</div>
+          <div class="metric-info">
+            <span class="metric-value" id="statClasses">0</span>
+            <span class="metric-label">Clases Agendadas</span>
+          </div>
+        </div>
+        
+        <div class="glass-card metric-card orange">
+          <div class="metric-icon-wrapper">📝</div>
+          <div class="metric-info">
+            <span class="metric-value" id="statPendingInscriptions">0</span>
+            <span class="metric-label">Preinscripciones</span>
+          </div>
+        </div>
+        
+        <div class="glass-card metric-card green">
+          <div class="metric-icon-wrapper">👥</div>
+          <div class="metric-info">
+            <span class="metric-value" id="statUsers">0</span>
+            <span class="metric-label">Usuarios Registrados</span>
+          </div>
+        </div>
+        
+        <div class="glass-card metric-card red">
+          <div class="metric-icon-wrapper">🚗</div>
+          <div class="metric-info">
+            <span class="metric-value" id="statVehicles">0</span>
+            <span class="metric-label">Vehículos Totales</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Body -->
+      <div class="two-col-grid">
+        <!-- Live Notifications Console -->
+        <div class="glass-card">
+          <div class="form-title">
+            <span>🔔</span>
+            <span>Avisos de Agenda en Tiempo Real</span>
+          </div>
+          <div class="list-container list-scroll-box" id="dashboardNotificationsFeed">
+            <div class="empty-placeholder">
+              <span class="empty-placeholder-icon">📢</span>
+              <span>No hay avisos recientes. Programe una clase para ver las notificaciones enviadas a instructores.</span>
             </div>
-            
-            <div class="form-group hidden" id="vehiculoGroup">
-              <label for="vehiculoId">Identificador del Vehículo</label>
-              <input type="text" id="vehiculoId" name="vehiculoId" placeholder="Patente / ID: e.g. AB-CD-12">
-            </div>
           </div>
+        </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label for="fechaHoraInicio">Horario de Inicio</label>
-              <input type="datetime-local" id="fechaHoraInicio" name="fechaHoraInicio" required>
-            </div>
-            
-            <div class="form-group">
-              <label for="fechaHoraFin">Horario de Término</label>
-              <input type="datetime-local" id="fechaHoraFin" name="fechaHoraFin" required>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="docenteId">Docente Asignado</label>
-            <select id="docenteId" name="docenteId" required>
-              <option value="" disabled selected>Cargando docentes...</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Asignación de Estudiante(s)</label>
-            <p class="field-help" id="studentsHelp">Seleccione los estudiantes para esta sesión.</p>
-            <div class="students-checkbox-list" id="studentsContainer">
-              <!-- Cargado dinámicamente -->
-              <span class="loading-text">Cargando alumnos inscritos...</span>
-            </div>
-          </div>
-
-          <button type="submit" class="btn-submit" id="submitBtn">
-            <span class="btn-text">Agendar y Guardar Clase</span>
-            <span class="btn-loader"></span>
-          </button>
-        </form>
-      </section>
-
-      <!-- Sección de Calendario y Feed de Notificaciones -->
-      <div class="right-column">
-        <section class="card glass-card notification-console">
-          <div class="card-header">
-            <h3>🔔 Notificaciones en Tiempo Real</h3>
-            <p>Monitoreo de notificaciones enviadas a la agenda de los docentes.</p>
-          </div>
-          <div class="notifications-feed" id="notificationsFeed">
-            <div class="empty-feed">Sin notificaciones recientes. Programe una clase para ver el aviso enviado.</div>
-          </div>
-        </section>
-
-        <section class="card glass-card calendar-section">
-          <div class="card-header">
-            <h3>📅 Clases Programadas</h3>
-            <p>Listado del calendario de conducción registrado en el sistema.</p>
+        <!-- Quick actions / stats summary -->
+        <div class="glass-card">
+          <div class="form-title">
+            <span>⚡</span>
+            <span>Herramientas del Sistema</span>
           </div>
           
-          <div class="classes-list" id="classesList">
-            <div class="empty-list">No hay clases programadas.</div>
+          <div style="display: flex; flex-direction: column; gap: 15px;">
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4;">
+              Utilice las siguientes herramientas para simular registros rápidos de prueba y verificar las validaciones del sistema (RUTs duplicados, roles, horarios).
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <button id="quickDocenteBtn" class="btn-secondary" style="width: 100%; justify-content: flex-start; padding: 12px 18px;">
+                <span>➕</span>
+                <span>Crear Docente de Prueba</span>
+              </button>
+              <button id="quickAlumnoBtn" class="btn-secondary" style="width: 100%; justify-content: flex-start; padding: 12px 18px;">
+                <span>➕</span>
+                <span>Crear Alumno de Prueba</span>
+              </button>
+              <button id="quickVehiculoBtn" class="btn-secondary" style="width: 100%; justify-content: flex-start; padding: 12px 18px;">
+                <span>➕</span>
+                <span>Crear Vehículo de Prueba</span>
+              </button>
+            </div>
           </div>
-        </section>
+        </div>
       </div>
-    </main>
+    </section>
+
+    <!-- SECTION 2: CLASSES MANAGEMENT -->
+    <section id="clasesSection" class="content-section">
+      <div class="two-col-grid">
+        <!-- Class Booking Form -->
+        <div class="glass-card">
+          <div class="form-title">
+            <span>📅</span>
+            <span>Programar Nueva Sesión de Conducción</span>
+          </div>
+          
+          <form id="classSchedulingForm" class="form-grid">
+            <div class="input-field-group">
+              <label for="classDesc">Descripción de la Sesión</label>
+              <input type="text" id="classDesc" name="descripcion" placeholder="Ej: Clase práctica de estacionamiento paralelo" required>
+            </div>
+
+            <div class="form-row">
+              <div class="input-field-group">
+                <label for="classType">Tipo de Clase</label>
+                <select id="classType" name="tipo" required>
+                  <option value="" disabled selected>Seleccione modalidad...</option>
+                  <option value="Práctica">🚗 Práctica (Requiere vehículo)</option>
+                  <option value="Teórica">📖 Teórica (Asignación masiva)</option>
+                </select>
+              </div>
+              
+              <div class="input-field-group" id="classVehicleWrapper" style="display: none;">
+                <label for="classVehicle">Patente del Vehículo</label>
+                <select id="classVehicle" name="vehiculoId">
+                  <option value="" disabled selected>Cargando vehículos...</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="input-field-group">
+                <label for="classStart">Horario de Inicio</label>
+                <input type="datetime-local" id="classStart" name="fechaHoraInicio" required>
+              </div>
+              
+              <div class="input-field-group">
+                <label for="classEnd">Horario de Término</label>
+                <input type="datetime-local" id="classEnd" name="fechaHoraFin" required>
+              </div>
+            </div>
+
+            <div class="input-field-group">
+              <label for="classDocente">Docente Asignado</label>
+              <select id="classDocente" name="docenteId" required>
+                <option value="" disabled selected>Cargando docentes...</option>
+              </select>
+            </div>
+
+            <div class="input-field-group">
+              <label>Asignación de Estudiante(s)</label>
+              <div class="checkbox-scroll-container" id="classStudentsList">
+                <span style="font-size: 0.85rem; color: var(--text-muted); font-style: italic; text-align: center; padding: 15px;">
+                  Cargando alumnos del sistema...
+                </span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="scheduleSubmitBtn">
+              <span>Agendar y Guardar Clase</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Class List / Calendar view -->
+        <div class="glass-card">
+          <div class="form-title">
+            <span>📅</span>
+            <span>Clases Programadas</span>
+          </div>
+          
+          <div class="list-container list-scroll-box" id="scheduledClassesList">
+            <div class="empty-placeholder">
+              <span class="empty-placeholder-icon">📭</span>
+              <span>No hay clases registradas en el sistema.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: PRE-INSCRIPTIONS -->
+    <section id="preinscripcionesSection" class="content-section">
+      <div class="two-col-grid">
+        <!-- New Registration Submission -->
+        <div class="glass-card">
+          <div class="form-title">
+            <span>✍️</span>
+            <span>Formulario Público de Preinscripción</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.4;">
+            Utilice este formulario para simular la preinscripción de nuevos estudiantes. Al ser aprobado por secretaría, se creará su cuenta en la base de datos de manera automática.
+          </p>
+          
+          <form id="preRegistrationForm" class="form-grid">
+            <div class="input-field-group">
+              <label for="preName">Nombre Completo</label>
+              <input type="text" id="preName" name="nombreCompleto" placeholder="Ej: Juan Carlos Pérez" required>
+            </div>
+
+            <div class="form-row">
+              <div class="input-field-group">
+                <label for="preRut">RUT</label>
+                <input type="text" id="preRut" name="rut" placeholder="Ej: 19.345.221-3" required>
+              </div>
+              
+              <div class="input-field-group">
+                <label for="prePhone">Teléfono de Contacto</label>
+                <input type="text" id="prePhone" name="telefono" placeholder="Ej: +56 9 8277 1223" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="input-field-group">
+                <label for="preCampus">Sede Asignada</label>
+                <select id="preCampus" name="sede" required>
+                  <option value="" disabled selected>Seleccione sede...</option>
+                  <option value="Central">Central</option>
+                  <option value="Norte">Norte</option>
+                  <option value="Sur">Sur</option>
+                </select>
+              </div>
+              
+              <div class="input-field-group">
+                <label for="prePlan">Plan Seleccionado</label>
+                <select id="prePlan" name="plan" required>
+                  <option value="" disabled selected>Seleccione plan...</option>
+                  <option value="Plan Básico B (10 clases)">Plan Básico B (10 clases)</option>
+                  <option value="Plan Completo B (15 clases)">Plan Completo B (15 clases)</option>
+                  <option value="Plan Profesional C (20 clases)">Plan Profesional C (20 clases)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="input-field-group">
+              <label for="preReceipt">URL del Comprobante de Pago (Mock)</label>
+              <input type="text" id="preReceipt" name="comprobantePagoUrl" placeholder="Ej: https://picsum.photos/800/600" required>
+            </div>
+
+            <button type="submit" class="btn-primary" id="preRegisterSubmitBtn">
+              <span>Enviar Preinscripción</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Admin Control for Approvals/Rejections -->
+        <div class="glass-card" style="grid-column: span 1;">
+          <div class="form-title">
+            <span>⚙️</span>
+            <span>Bandeja de Aprobaciones (Secretaría)</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.4;">
+            Revise los comprobantes de pago de los aspirantes pendientes. Al aprobar, se crea un usuario de tipo <strong>Alumno</strong> y se le asigna su RUT como contraseña inicial.
+          </p>
+
+          <div class="list-container list-scroll-box" id="pendingInscriptionsList" style="max-height: 480px;">
+            <div class="empty-placeholder">
+              <span class="empty-placeholder-icon">📂</span>
+              <span>No hay solicitudes de preinscripción pendientes.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: VEHICLE FLEET & MAINTENANCE -->
+    <section id="vehiculosSection" class="content-section">
+      <!-- Grid of vehicles -->
+      <div class="glass-card">
+        <div class="form-title" style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span>🚗</span>
+            <span>Flota de la Escuela de Manejo</span>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn-success" id="btnShowAddVehicleModal" style="padding: 8px 16px;">
+              <span>➕ Add Vehículo</span>
+            </button>
+            <button class="btn-primary" id="btnShowMaintenanceModal" style="padding: 8px 16px; background: linear-gradient(135deg, var(--warning), #d97706); box-shadow: none;">
+              <span>🔧 Reportar Falla</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="fleet-grid" id="fleetGrid">
+          <!-- Dynamically populated with vehicle cards -->
+          <div class="empty-placeholder" style="grid-column: span 3;">
+            <span class="empty-placeholder-icon">🚗</span>
+            <span>Cargando flota de vehículos...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Maintenance/Fail History Logs -->
+      <div class="glass-card">
+        <div class="form-title">
+          <span>📋</span>
+          <span>Vehículos en Taller o con Alertas</span>
+        </div>
+        <div class="list-container" id="maintenanceLogsList">
+          <div class="empty-placeholder">
+            <span class="empty-placeholder-icon">🛡️</span>
+            <span>No hay registros en mantención activa en este momento.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: ACCOUNT & PROFILE / AUTHENTICATION -->
+    <section id="perfilSection" class="content-section">
+      
+      <!-- AUTHENTICATION FORM VIEW -->
+      <div class="auth-flow-container" id="authFlowContainer">
+        
+        <!-- LOGIN CARD -->
+        <div class="glass-card auth-card" id="loginCard">
+          <div class="form-title">
+            <span>🔑</span>
+            <span>Iniciar Sesión</span>
+          </div>
+          
+          <form id="loginForm" class="form-grid">
+            <div class="input-field-group">
+              <label for="loginEmail">Correo Electrónico</label>
+              <input type="email" id="loginEmail" placeholder="correo@escuela.cl" required>
+            </div>
+            
+            <div class="input-field-group">
+              <label for="loginPassword">Contraseña</label>
+              <input type="password" id="loginPassword" placeholder="••••••••" required>
+            </div>
+            
+            <button type="submit" class="btn-primary" id="loginSubmitBtn">
+              <span>Ingresar</span>
+            </button>
+          </form>
+          
+          <div class="auth-switch-link">
+            ¿No tienes cuenta? <span id="switchToRegister">Regístrate aquí</span>
+          </div>
+        </div>
+
+        <!-- REGISTER CARD -->
+        <div class="glass-card auth-card" id="registerCard" style="display: none;">
+          <div class="form-title">
+            <span>👤</span>
+            <span>Crear Nueva Cuenta</span>
+          </div>
+          
+          <form id="registerForm" class="form-grid">
+            <div class="input-field-group">
+              <label for="regEmail">Correo Electrónico</label>
+              <input type="email" id="regEmail" placeholder="correo@escuela.cl" required>
+            </div>
+            
+            <div class="input-field-group">
+              <label for="regPassword">Contraseña</label>
+              <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required>
+            </div>
+
+            <div class="form-row">
+              <div class="input-field-group">
+                <label for="regRut">RUT</label>
+                <input type="text" id="regRut" placeholder="19.345.221-K">
+              </div>
+              
+              <div class="input-field-group">
+                <label for="regPhone">Teléfono</label>
+                <input type="text" id="regPhone" placeholder="+56 9 ...">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="input-field-group">
+                <label for="regCampus">Sede</label>
+                <select id="regCampus">
+                  <option value="Central" selected>Central</option>
+                  <option value="Norte">Norte</option>
+                  <option value="Sur">Sur</option>
+                </select>
+              </div>
+              
+              <div class="input-field-group">
+                <label for="regRole">Rol de Acceso</label>
+                <select id="regRole">
+                  <option value="Secretaria">Secretaría / Administrativo</option>
+                  <option value="Docente">Docente / Instructor</option>
+                  <option value="Alumno">Alumno / Estudiante</option>
+                </select>
+              </div>
+            </div>
+            
+            <button type="submit" class="btn-primary" id="registerSubmitBtn">
+              <span>Crear Cuenta</span>
+            </button>
+          </form>
+          
+          <div class="auth-switch-link">
+            ¿Ya tienes cuenta? <span id="switchToLogin">Inicia sesión aquí</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- AUTHENTICATED ACCOUNT DETAILS -->
+      <div class="glass-card" id="profileDetailsContainer" style="display: none;">
+        <div class="form-title">
+          <span>👤</span>
+          <span>Información de mi Cuenta</span>
+        </div>
+        
+        <div style="display: flex; gap: 30px; align-items: flex-start; flex-wrap: wrap;">
+          <div class="user-avatar" style="width: 100px; height: 100px; font-size: 2.5rem; border-radius: 50%;" id="profileBigAvatar">U</div>
+          
+          <div style="display: flex; flex-direction: column; gap: 15px; flex-grow: 1; min-width: 250px;">
+            <h3 id="profileName" style="font-size: 1.5rem; font-weight: 700;">usuario@escuela.cl</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; background: rgba(8, 12, 20, 0.4); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--border-glass);">
+              <div>
+                <div style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">Rol asignado</div>
+                <div id="profileRole" style="font-weight: 600; font-size: 1rem; color: var(--primary);">Estudiante</div>
+              </div>
+              
+              <div>
+                <div style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">RUT</div>
+                <div id="profileRut" style="font-weight: 600; font-size: 1rem;">19.332.221-K</div>
+              </div>
+              
+              <div>
+                <div style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">Teléfono</div>
+                <div id="profilePhone" style="font-weight: 600; font-size: 1rem;">+56 9 8888 7777</div>
+              </div>
+              
+              <div>
+                <div style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">Sede Asignada</div>
+                <div id="profileCampus" style="font-weight: 600; font-size: 1rem;">Central</div>
+              </div>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+              <button class="btn-secondary" id="profileLogoutBtn">
+                <span>🚪 Cerrar Sesión</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODALS OVERLAYS -->
+  
+  <!-- REJECTION REASON MODAL -->
+  <div class="modal-overlay" id="rejectionModal">
+    <div class="glass-card modal-content">
+      <div class="modal-header">
+        <h3 style="font-weight: 700;">Rechazar Preinscripción</h3>
+        <button class="modal-close-btn" onclick="closeRejectionModal()">×</button>
+      </div>
+      <form id="rejectionForm" class="form-grid">
+        <input type="hidden" id="rejectionId">
+        <div class="input-field-group">
+          <label for="rejectionReason">Motivo del Rechazo</label>
+          <textarea id="rejectionReason" placeholder="Indique detalladamente por qué se rechaza la solicitud (ej. Comprobante de pago ilegible, RUT no coincide...)" rows="4" required></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+          <button type="button" class="btn-secondary" onclick="closeRejectionModal()">Cancelar</button>
+          <button type="submit" class="btn-danger">Rechazar Solicitud</button>
+        </div>
+      </form>
+    </div>
   </div>
 
-  <!-- Popups / Toasts -->
-  <div id="toastContainer" class="toast-container"></div>
-
-  <!-- Seccion de Registro Rápido para Pruebas -->
-  <footer class="app-footer">
-    <div class="card glass-card demo-setup">
-      <h4>🛠️ Herramientas de Prueba (Datos de Ejemplo)</h4>
-      <p>Use estos botones rápidos para registrar docentes o alumnos en el sistema y probar las validaciones:</p>
-      <div class="demo-buttons">
-        <button id="addDocenteBtn" class="btn-demo">➕ Crear Docente de Prueba</button>
-        <button id="addAlumnoBtn" class="btn-demo">➕ Crear Alumno de Prueba</button>
+  <!-- RECEIPT VIEWER MODAL -->
+  <div class="modal-overlay" id="receiptModal">
+    <div class="glass-card modal-content" style="width: 600px;">
+      <div class="modal-header">
+        <h3 style="font-weight: 700;">Comprobante de Transacción</h3>
+        <button class="modal-close-btn" onclick="closeReceiptModal()">×</button>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center; background: #000; padding: 10px; border-radius: var(--radius-lg); overflow: hidden;">
+        <img id="receiptImage" src="" alt="Comprobante de pago" style="max-width: 100%; max-height: 400px; object-fit: contain;">
+      </div>
+      <div style="display: flex; justify-content: flex-end; margin-top: 15px;">
+        <button class="btn-secondary" onclick="closeReceiptModal()">Cerrar</button>
       </div>
     </div>
-  </footer>
+  </div>
 
+  <!-- ADD VEHICLE MODAL -->
+  <div class="modal-overlay" id="addVehicleModal">
+    <div class="glass-card modal-content">
+      <div class="modal-header">
+        <h3 style="font-weight: 700;">Añadir Nuevo Vehículo</h3>
+        <button class="modal-close-btn" onclick="closeAddVehicleModal()">×</button>
+      </div>
+      <form id="addVehicleForm" class="form-grid">
+        <div class="input-field-group">
+          <label for="vehPatente">Patente del Vehículo</label>
+          <input type="text" id="vehPatente" placeholder="Ej: AB-CD-12" required>
+        </div>
+        
+        <div class="input-field-group">
+          <label for="vehModelo">Modelo / Descripción</label>
+          <input type="text" id="vehModelo" placeholder="Ej: Hyundai Accent 2024" required>
+        </div>
+        
+        <div class="input-field-group">
+          <label for="vehKilometraje">Kilometraje Inicial</label>
+          <input type="number" id="vehKilometraje" min="0" placeholder="Ej: 1500" required>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+          <button type="button" class="btn-secondary" onclick="closeAddVehicleModal()">Cancelar</button>
+          <button type="submit" class="btn-success">Guardar Vehículo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- REPORT MAINTENANCE MODAL -->
+  <div class="modal-overlay" id="maintenanceModal">
+    <div class="glass-card modal-content">
+      <div class="modal-header">
+        <h3 style="font-weight: 700;">Reportar Falla / Registrar Odómetro</h3>
+        <button class="modal-close-btn" onclick="closeMaintenanceModal()">×</button>
+      </div>
+      <form id="maintenanceForm" class="form-grid">
+        <div class="input-field-group">
+          <label for="maintVehicleId">Seleccionar Vehículo</label>
+          <select id="maintVehicleId" required>
+            <option value="" disabled selected>Cargando vehículos...</option>
+          </select>
+        </div>
+
+        <div class="input-field-group">
+          <label for="maintKm">Kilometraje de Término (Odómetro)</label>
+          <input type="number" id="maintKm" min="0" placeholder="Ej: 45200" required>
+        </div>
+
+        <div class="form-title" style="font-size: 0.95rem; margin-top: 10px; margin-bottom: 10px;">
+          <span>⚠️</span>
+          <span>¿Hay alguna falla que reportar? (Opcional)</span>
+        </div>
+
+        <div class="input-field-group">
+          <label for="maintDesc">Descripción de la Falla</label>
+          <input type="text" id="maintDesc" placeholder="Ej: Ruido extraño al presionar pedal de freno">
+        </div>
+
+        <div class="input-field-group">
+          <label for="maintSeverity">Gravedad de la Falla</label>
+          <select id="maintSeverity">
+            <option value="" selected>Sin fallas o irrelevante</option>
+            <option value="Baja">Baja (Permite circular)</option>
+            <option value="Alta">Alta (Pone el auto En Mantenimiento)</option>
+          </select>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+          <button type="button" class="btn-secondary" onclick="closeMaintenanceModal()">Cancelar</button>
+          <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, var(--warning), #d97706); box-shadow: none;">Enviar Reporte</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOASTS CONTAINER -->
+  <div class="toasts-container" id="toastsContainer"></div>
+
+  <!-- Application Script -->
   <script src="app.js"></script>
 </body>
 </html>
