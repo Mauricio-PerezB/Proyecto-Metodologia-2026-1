@@ -1,5 +1,5 @@
 export const createSwalField_OLD = (inputId, label, value) => {
-    return `
+  return `
         <div class="input m-1 form-group">
             <label for="swal2-input${Number(inputId)}" class="label">${label}</label>  
             <input id="swal2-input${Number(inputId)}" placeholder="${label}" value="${value}"></input>
@@ -8,7 +8,7 @@ export const createSwalField_OLD = (inputId, label, value) => {
 }
 
 export const createSwalDateField_OLD = (inputId, label, value) => {
-    return `
+  return `
     <label class="input m-1">
         <span class="label">${label}</span>
         <input type="date" id="swal2-input${Number(inputId)}" value="${value || getToday()}" />

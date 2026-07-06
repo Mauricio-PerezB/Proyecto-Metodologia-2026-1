@@ -7,7 +7,7 @@ export const DropdownList = (className, data, label, id) => {
                     <option>{String(name)}</option>
                 );
             })}
-        </select>   
+        </select>
     );
 }
 
@@ -16,8 +16,8 @@ export const StaticDropdownList = (data, label, id, className, disabled) => {
         <select class="select ${className}" id=${id}>
             <option ${disabled ? "disabled" : ""} selected>${label}</option>
             ${Array.isArray(data) && data.map((element) => {
-                return `<option>${String(element)}</option>`
-            }).join(" ")}
+        return `<option>${String(element)}</option>`
+    }).join(" ")}
         </select>
     `
 }
