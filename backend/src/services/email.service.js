@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { configEnv } from '../config/configEnv.js';
+const configEnv = () => process.env;
 
 // Configurar el transportador de correo (se requiere EMAIL_USER y EMAIL_PASS en .env)
 const transporter = nodemailer.createTransport({
