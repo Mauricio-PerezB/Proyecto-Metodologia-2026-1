@@ -47,7 +47,7 @@ export const SidebarBase = ({pageContent}) => {
             {/* Sidebar content here */}
             <ul className="menu w-full grow">
                 <SidebarItem label="Inicio" destination="/home" icon={MdHouse} />            
-                <SidebarItem label="Clases" destination="/clase" icon={MdSchool} />
+                <SidebarItem label="Gestión de Clases" destination="/gestion-clases-alumnos" icon={MdSchool} />
                 {user?.rol === 'profesor' && (
                     <>
                         <SidebarItem label="Mis Clases" destination="/mis-clases" icon={MdSchool} />
