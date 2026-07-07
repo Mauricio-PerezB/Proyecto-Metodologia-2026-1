@@ -15,8 +15,9 @@ export default function GestionVehiculosSecretaria() {
   const [editingVehiculo, setEditingVehiculo] = useState(null);
   const [formData, setFormData] = useState({
     patente: '',
-    transmision: 'mecanico',
-    estado: 'disponible'
+    modelo: '',
+    kilometrajeInicial: 0,
+    estado: 'Activo'
   });
 
   useEffect(() => {
@@ -54,22 +55,30 @@ export default function GestionVehiculosSecretaria() {
     e.preventDefault();
     try {
       if (editingVehiculo) {
-        const res = await updateVehiculo(editingVehiculo.id, formData);
+        const res = await updateVehiculo(editingVehiculo.id, {
+          patente: formData.patente,
+          modelo: formData.modelo,
+          estado: formData.estado
+        });
         if (res?.data || res?.status === "Success" || res?.message) {
           alert("Vehículo actualizado exitosamente");
           setShowModal(false);
           setEditingVehiculo(null);
-          setFormData({ patente: '', transmision: 'mecanico', estado: 'disponible' });
+          setFormData({ patente: '', modelo: '', kilometrajeInicial: 0, estado: 'Activo' });
           cargarVehiculos();
         } else {
           alert(res?.message || "Error al actualizar vehículo");
         }
       } else {
-        const res = await createVehiculo(formData);
-        if (res?.data) {
+        const res = await createVehiculo({
+          patente: formData.patente,
+          modelo: formData.modelo,
+          kilometrajeInicial: Number(formData.kilometrajeInicial) || 0
+        });
+        if (res?.data || res?.status === "Success") {
           alert("Vehículo registrado exitosamente");
           setShowModal(false);
-          setFormData({ patente: '', transmision: 'mecanico', estado: 'disponible' });
+          setFormData({ patente: '', modelo: '', kilometrajeInicial: 0, estado: 'Activo' });
           cargarVehiculos();
         } else {
           alert(res?.message || "Error al registrar vehículo");
@@ -127,7 +136,8 @@ export default function GestionVehiculosSecretaria() {
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <th className="px-4 py-3 text-sm font-medium text-gray-600">ID</th>
                   <th className="px-4 py-3 text-sm font-medium text-gray-600">Patente</th>
-                  <th className="px-4 py-3 text-sm font-medium text-gray-600">Transmisión</th>
+                  <th className="px-4 py-3 text-sm font-medium text-gray-600">Modelo</th>
+                  <th className="px-4 py-3 text-sm font-medium text-gray-600">Kilometraje</th>
                   <th className="px-4 py-3 text-sm font-medium text-gray-600">Estado</th>
                   <th className="px-4 py-3 text-sm font-medium text-gray-600 text-right">Acciones</th>
                 </tr>
@@ -137,10 +147,11 @@ export default function GestionVehiculosSecretaria() {
                   <tr key={vehiculo.id} className="border-b border-gray-100 hover:bg-gray-50">
                     <td className="px-4 py-3 text-sm text-gray-500">{vehiculo.id}</td>
                     <td className="px-4 py-3 text-sm font-medium text-gray-900">{vehiculo.patente}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700 uppercase">{vehiculo.transmision}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">{vehiculo.modelo}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{vehiculo.kilometraje ?? 0} km</td>
                     <td className="px-4 py-3">
                       <span className="px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
-                        {vehiculo.estado || 'DISPONIBLE'}
+                        {vehiculo.estado || 'Activo'}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right space-x-2">
@@ -150,8 +161,9 @@ export default function GestionVehiculosSecretaria() {
                           setEditingVehiculo(vehiculo);
                           setFormData({ 
                             patente: vehiculo.patente, 
-                            transmision: vehiculo.transmision,
-                            estado: vehiculo.estado || 'disponible'
+                            modelo: vehiculo.modelo,
+                            kilometrajeInicial: vehiculo.kilometraje,
+                            estado: vehiculo.estado || 'Activo'
                           });
                           setShowModal(true);
                         }}
@@ -201,7 +213,7 @@ export default function GestionVehiculosSecretaria() {
                       {reserva.clase ? reserva.clase.hora_inicio : 'N/A'}
                     </td>
                     <td className="px-4 py-3 text-sm font-bold text-gray-800">
-                      {reserva.vehiculo ? `${reserva.vehiculo.patente} (${reserva.vehiculo.transmision})` : 'N/A'}
+                      {reserva.vehiculo ? `${reserva.vehiculo.patente} (${reserva.vehiculo.modelo})` : 'N/A'}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-700">
                       {reserva.user?.nombre}
@@ -243,16 +255,30 @@ export default function GestionVehiculosSecretaria() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Transmisión</label>
-                <select 
-                  className="select select-bordered w-full mt-1" 
-                  value={formData.transmision} 
-                  onChange={e => setFormData({...formData, transmision: e.target.value})}
-                >
-                  <option value="mecanico">Manual</option>
-                  <option value="automatico">Automático</option>
-                </select>
+                <label className="block text-sm font-medium text-gray-700">Modelo / Descripción</label>
+                <input 
+                  required 
+                  type="text" 
+                  placeholder="Ej: Hyundai Accent 2024"
+                  className="input input-bordered w-full mt-1" 
+                  value={formData.modelo} 
+                  onChange={e => setFormData({...formData, modelo: e.target.value})} 
+                />
               </div>
+
+              {!editingVehiculo && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Kilometraje Inicial</label>
+                  <input 
+                    type="number" 
+                    min="0"
+                    placeholder="Ej: 1500"
+                    className="input input-bordered w-full mt-1" 
+                    value={formData.kilometrajeInicial} 
+                    onChange={e => setFormData({...formData, kilometrajeInicial: e.target.value})} 
+                  />
+                </div>
+              )}
 
               {editingVehiculo && (
                 <div>
@@ -262,9 +288,9 @@ export default function GestionVehiculosSecretaria() {
                     value={formData.estado} 
                     onChange={e => setFormData({...formData, estado: e.target.value})}
                   >
-                    <option value="disponible">Disponible</option>
-                    <option value="en_taller">En Taller</option>
-                    <option value="inactivo">Inactivo</option>
+                    <option value="Activo">Activo</option>
+                    <option value="En mantenimiento">En Mantenimiento</option>
+                    <option value="Inactivo">Inactivo</option>
                   </select>
                 </div>
               )}
