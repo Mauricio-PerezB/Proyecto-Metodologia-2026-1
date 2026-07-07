@@ -347,23 +347,23 @@ const CalificacionesAlumnos = () => {
             </h3>
             <form onSubmit={handleCreateStudent} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">Nombre Completo</label>
+                <label className="block text-xs font-semibold text-gray-700 uppercase mb-1">Nombre Completo</label>
                 <input
                   type="text"
                   required
                   placeholder="Ej. Juan Pérez"
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-gray-50 text-gray-900 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
                   value={studentForm.nombre}
                   onChange={(e) => setStudentForm({ ...studentForm, nombre: e.target.value })}
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">Correo Electrónico</label>
+                <label className="block text-xs font-semibold text-gray-700 uppercase mb-1">Correo Electrónico</label>
                 <input
                   type="email"
                   required
                   placeholder="juan.perez@example.com"
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-gray-50 text-gray-900 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
                   value={studentForm.email}
                   onChange={(e) => setStudentForm({ ...studentForm, email: e.target.value })}
                 />
@@ -397,12 +397,12 @@ const CalificacionesAlumnos = () => {
               <MdAssignment className="text-indigo-600 text-2xl" />
               <span>Registrar Calificación de Test</span>
             </h3>
-            <p className="text-xs text-gray-500 mb-4">
+            <p className="text-xs text-gray-600 mb-4">
               Registrar nota de simulación teórica para <strong>{selectedAlumno.nombre}</strong>.
             </p>
             <form onSubmit={handleAddTest} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">Nota de Simulación (%)</label>
+                <label className="block text-xs font-semibold text-gray-700 uppercase mb-1">Nota de Simulación (%)</label>
                 <input
                   type="number"
                   required
@@ -410,7 +410,7 @@ const CalificacionesAlumnos = () => {
                   max="100"
                   step="0.01"
                   placeholder="Porcentaje de aprobación (0 - 100)"
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-gray-50 text-gray-900 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
                   value={testForm.nota}
                   onChange={(e) => setTestForm({ nota: e.target.value })}
                 />
@@ -447,12 +447,12 @@ const CalificacionesAlumnos = () => {
               <MdSchool className="text-indigo-600 text-2xl" />
               <span>Registrar Examen Psicotécnico</span>
             </h3>
-            <p className="text-xs text-gray-500 mb-4">
+            <p className="text-xs text-gray-600 mb-4">
               Registrar examen práctico/psicotécnico para <strong>{selectedAlumno.nombre}</strong>.
             </p>
             <form onSubmit={handleAddExamen} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">Nota (%)</label>
+                <label className="block text-xs font-semibold text-gray-700 uppercase mb-1">Nota (%)</label>
                 <input
                   type="number"
                   required
@@ -460,21 +460,21 @@ const CalificacionesAlumnos = () => {
                   max="100"
                   step="0.01"
                   placeholder="Porcentaje obtenido (0 - 100)"
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-gray-50 text-gray-900 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
                   value={examenForm.nota}
                   onChange={(e) => setExamenForm({ ...examenForm, nota: e.target.value })}
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">Estado de Aprobación</label>
+                <label className="block text-xs font-semibold text-gray-700 uppercase mb-1">Estado de Aprobación</label>
                 <select
-                  className="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-gray-50 text-gray-900 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
                   value={examenForm.estado}
                   onChange={(e) => setExamenForm({ ...examenForm, estado: e.target.value })}
                 >
-                  <option value="Aprobado">Aprobado</option>
-                  <option value="Reprobado">Reprobado</option>
-                  <option value="Pendiente">Pendiente</option>
+                  <option className="text-gray-900 bg-white" value="Aprobado">Aprobado</option>
+                  <option className="text-gray-900 bg-white" value="Reprobado">Reprobado</option>
+                  <option className="text-gray-900 bg-white" value="Pendiente">Pendiente</option>
                 </select>
               </div>
               <div className="flex gap-3 justify-end pt-2">
