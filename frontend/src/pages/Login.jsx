@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { login, preRegister } from '@services/auth.service.js';
 import useLogin from '@hooks/useLogin.jsx';
 import { Eye, EyeOff } from 'lucide-react';
-
+import { getPlanesService } from '../services/plan.service.js';
+import { useEffect } from 'react';
 const Login = () => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
@@ -22,12 +23,27 @@ const Login = () => {
         telefono: '',
         fechaNacimiento: '',
         sede: '',
-        plan: '',
+        id_plan: '',
         comprobante: null,
         aceptaTerminos: false
     });
     const [preRegisterSuccess, setPreRegisterSuccess] = useState('');
     const [preRegisterError, setPreRegisterError] = useState('');
+    const [planes, setPlanes] = useState([]);
+
+    useEffect(() => {
+        const fetchPlanes = async () => {
+            try {
+                const response = await getPlanesService();
+                if (response.data && response.data.data) {
+                    setPlanes(response.data.data.filter(p => p.estado === 'activo'));
+                }
+            } catch (error) {
+                console.error("Error fetching planes", error);
+            }
+        };
+        fetchPlanes();
+    }, []);
 
     const {
         errorEmail,
@@ -179,7 +195,7 @@ const Login = () => {
                     telefono: '',
                     fechaNacimiento: '',
                     sede: '',
-                    plan: '',
+                    id_plan: '',
                     comprobante: null,
                     aceptaTerminos: false
                 });
@@ -400,16 +416,18 @@ const Login = () => {
                                     <div>
                                         <label className="text-xs text-slate-500 font-bold ml-1 mb-1 block">Plan a Contratar</label>
                                         <select
-                                            name="plan"
-                                            value={preRegisterData.plan}
+                                            name="id_plan"
+                                            value={preRegisterData.id_plan}
                                             onChange={handlePreRegisterChange}
                                             className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 focus:outline-none transition-all duration-200 text-sm"
                                             required
                                         >
                                             <option value="" disabled>Selecciona un plan</option>
-                                            <option value="Basico">Plan Básico</option>
-                                            <option value="Intermedio">Plan Intermedio</option>
-                                            <option value="Avanzado">Plan Avanzado</option>
+                                            {planes.map(p => (
+                                                <option key={p.id_plan} value={p.id_plan}>
+                                                    {p.nombre} ({p.clases_totales} clases) - ${p.costo.toLocaleString()}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
                                     <div>
