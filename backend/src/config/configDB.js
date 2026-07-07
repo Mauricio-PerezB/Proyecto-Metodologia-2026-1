@@ -7,7 +7,7 @@ import { Clase } from "../entities/clase.entity.js";
 import { PreRegistro } from "../entities/preregistro.entity.js";
 import { Vehiculo } from "../entities/vehiculo.entity.js";
 import { Alumno } from "../entities/alumno.entity.js";
-import { Examen } from "../entities/examen.entity.js";
+import { ExamenPractico } from "../entities/examen.entity.js";
 import { ExamenPsicotecnico } from "../entities/examenPsicotecnico.entity.js";
 import { TestTeorico } from "../entities/testTeorico.entity.js";
 import { Plan } from "../entities/plan.entity.js";
@@ -24,7 +24,7 @@ export const AppDataSource = new DataSource({
     Clase,
     Vehiculo,
     Alumno,
-    Examen,
+    ExamenPractico,
     ExamenPsicotecnico,
     PreRegistro,
     TestTeorico,
