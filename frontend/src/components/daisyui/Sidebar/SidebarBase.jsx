@@ -51,6 +51,7 @@ export const SidebarBase = ({pageContent}) => {
                 {user?.rol === 'profesor' && (
                     <>
                         <SidebarItem label="Mis Clases" destination="/mis-clases" icon={MdSchool} />
+                        <SidebarItem label="Evaluaciones Internas" destination="/evaluaciones-internas" icon={MdSchool} />
                         <SidebarItem label="Generar QR Asistencia" destination="/generar-qr-clase" icon={MdSchool} />
                         <SidebarItem label="Ver Asistencias" destination="/ver-asistencia" icon={MdSchool} />
                     </>
@@ -66,6 +67,7 @@ export const SidebarBase = ({pageContent}) => {
                         <SidebarItem label="Gestionar Preinscripciones" destination="/gestionar-ventas" icon={MdAttachMoney} />
                         <SidebarItem label="Gestionar Planes" destination="/planes" icon={MdAdminPanelSettings} />
                         <SidebarItem label="Gestión de Vehículos" destination="/gestion-vehiculos" icon={MdDirectionsCar} />
+                        <SidebarItem label="Evaluaciones Internas" destination="/evaluaciones-internas" icon={MdSchool} />
                     </>
                 )}
                 {/* <SidebarItem label="Deudas" destination="/class" icon={MdAttachMoney} />*/}

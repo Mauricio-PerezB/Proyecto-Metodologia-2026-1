@@ -10,6 +10,7 @@ import ProtectedRoute from '@components/ProtectedRoute';
 import Plan from '@pages/Plan';
 import Evaluacion from '@pages/Evaluacion';
 import MisClases from '@pages/MisClases';
+import CalificacionesAlumnos from '@pages/CalificacionesAlumnos';
 import '@styles/styles.css';
 
 import HistorialClasesAlumno from '@pages/HistorialClasesAlumno';
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: '/evaluaciones',
         element: <Evaluacion />
+      },
+      {
+        path: '/evaluaciones-internas',
+        element: <CalificacionesAlumnos />
       },
       {
         path: '/mis-clases',
