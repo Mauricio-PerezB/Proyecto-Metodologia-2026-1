@@ -79,91 +79,80 @@ export async function downloadCertificateService(id, nombreAlumno) {
     const width = doc.internal.pageSize.getWidth(); // 279.4 mm
     const height = doc.internal.pageSize.getHeight(); // 215.9 mm
     
-    // 1. Dibujar bordes elegantes
-    // Borde exterior dorado (#D4AF37)
-    doc.setDrawColor(212, 175, 55);
-    doc.setLineWidth(1.5);
-    doc.rect(8, 8, width - 16, height - 16);
-    
-    // Borde interior azul pizarra oscuro
-    doc.setDrawColor(30, 41, 59);
-    doc.setLineWidth(0.5);
-    doc.rect(10, 10, width - 20, height - 20);
-    
-    // Esquinas decorativas
-    doc.rect(12, 12, 6, 6);
-    doc.rect(width - 18, 12, 6, 6);
-    doc.rect(12, height - 18, 6, 6);
-    doc.rect(width - 18, height - 18, 6, 6);
+    // 1. Dibujar un borde minimalista y limpio
+    doc.setDrawColor(148, 163, 184); // Slate-400
+    doc.setLineWidth(0.3);
+    doc.rect(12, 12, width - 24, height - 24);
 
     // 2. Encabezado de la Academia
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(22);
-    doc.setTextColor(30, 41, 59);
-    doc.text('ACADEMIA DE FORMACIÓN Y SIMULACIÓN', width / 2, 32, { align: 'center' });
+    doc.setFontSize(20);
+    doc.setTextColor(30, 41, 59); // Slate-800
+    doc.text('ACADEMIA DE FORMACIÓN Y SIMULACIÓN', width / 2, 34, { align: 'center' });
     
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(100, 116, 139);
-    doc.text('ESCUELA DE CONDUCTORES PROFESIONALES Y CAPACITACIÓN VIRTUAL', width / 2, 38, { align: 'center' });
+    doc.setFontSize(9);
+    doc.setTextColor(100, 116, 139); // Slate-500
+    doc.text('ESCUELA DE CONDUCTORES PROFESIONALES', width / 2, 40, { align: 'center' });
     
     // Línea divisoria superior
     doc.setDrawColor(226, 232, 240);
     doc.setLineWidth(0.5);
-    doc.line(40, 44, width - 40, 44);
+    doc.line(40, 46, width - 40, 46);
     
-    // Título del Certificado
+    // Título del Certificado (Gris oscuro profesional)
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(18);
-    doc.setTextColor(194, 120, 3);
-    doc.text('CERTIFICADO DE FINALIZACIÓN DE CURSO', width / 2, 56, { align: 'center' });
+    doc.setFontSize(16);
+    doc.setTextColor(30, 41, 59);
+    doc.text('CERTIFICADO DE FINALIZACIÓN DE CURSO', width / 2, 58, { align: 'center' });
     
     // Texto de otorgamiento
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(12);
-    doc.setTextColor(51, 65, 85);
-    doc.text('Por cuanto se hace constar que el alumno(a):', width / 2, 70, { align: 'center' });
+    doc.setFontSize(11);
+    doc.setTextColor(71, 85, 105);
+    doc.text('Por medio del presente documento se deja constancia que el alumno(a):', width / 2, 72, { align: 'center' });
     
     // Nombre del Alumno
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(26);
-    doc.setTextColor(15, 23, 42);
+    doc.setFontSize(24);
+    doc.setTextColor(15, 23, 42); // Slate-900
     doc.text(metadata.alumno.toUpperCase(), width / 2, 84, { align: 'center' });
     
     // Correo
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.setTextColor(71, 85, 105);
+    doc.setTextColor(100, 116, 139);
     doc.text(`Correo Electrónico: ${metadata.email}`, width / 2, 90, { align: 'center' });
     
     // Cuerpo del mensaje
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(11);
-    const textCuerpo = 'Ha cumplido satisfactoriamente con todos los requisitos académicos del programa de conducción,\n' +
-      'aprobando tanto las simulaciones teóricas como las evaluaciones prácticas psicotécnicas.';
-    doc.text(textCuerpo, width / 2, 100, { align: 'center' });
+    doc.setFontSize(10.5);
+    doc.setTextColor(71, 85, 105);
+    const textCuerpo = 'Ha completado satisfactoriamente el curso teórico-práctico de conducción en simuladores y vehículos,\n' +
+      'cumpliendo con todos los estándares académicos exigidos y aprobando las evaluaciones correspondientes.';
+    doc.text(textCuerpo, width / 2, 100, { align: 'center', lineHeightFactor: 1.4 });
     
-    // 3. Recuadro de calificaciones (Rendimiento Académico)
-    doc.setFillColor(248, 250, 252);
-    doc.setDrawColor(226, 232, 240);
-    doc.roundedRect(45, 114, width - 90, 26, 3, 3, 'FD');
-    
+    // 3. Sección de calificaciones simple sin tarjeta de color
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
-    doc.setTextColor(15, 23, 42);
-    doc.text('RENDIMIENTO ACADÉMICO REGISTRADO', width / 2, 120, { align: 'center' });
+    doc.setTextColor(30, 41, 59);
+    doc.text('CALIFICACIONES REGISTRADAS', width / 2, 118, { align: 'center' });
+
+    // Línea sutil para separar calificaciones
+    doc.setDrawColor(226, 232, 240);
+    doc.line(80, 122, width - 80, 122);
     
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.setTextColor(51, 65, 85);
-    doc.text(`Promedio de Evaluaciones Teóricas: ${metadata.promedio}%`, width / 2, 126, { align: 'center' });
-    doc.text('Examen Psicotécnico Práctico: APROBADO', width / 2, 132, { align: 'center' });
+    doc.setTextColor(71, 85, 105);
+    doc.text(`Promedio de Simulaciones Teóricas: ${metadata.promedio}%`, width / 2, 128, { align: 'center' });
+    doc.text('Examen Psicotécnico Práctico: APROBADO', width / 2, 134, { align: 'center' });
     
     // 4. Fechas y Firmas
     doc.setFont('helvetica', 'italic');
     doc.setFontSize(10);
     doc.setTextColor(100, 116, 139);
-    doc.text(`En fe de lo cual, se expide el presente documento en Santiago de Chile, el ${metadata.fecha}.`, width / 2, 154, { align: 'center' });
+    doc.text(`Expedido en Santiago de Chile, el ${metadata.fecha}.`, width / 2, 154, { align: 'center' });
     
     // Líneas de firma
     doc.setDrawColor(148, 163, 184);
