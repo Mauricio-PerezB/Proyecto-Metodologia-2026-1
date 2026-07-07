@@ -62,7 +62,10 @@ export const SidebarBase = ({pageContent}) => {
                     </>
                 )}
                 {user?.rol === 'secretario' && (
-                    <SidebarItem label="Gestionar Preinscripciones" destination="/gestionar-ventas" icon={MdAttachMoney} />
+                    <>
+                        <SidebarItem label="Gestionar Preinscripciones" destination="/gestionar-ventas" icon={MdAttachMoney} />
+                        <SidebarItem label="Gestión de Vehículos" destination="/gestion-vehiculos" icon={MdDirectionsCar} />
+                    </>
                 )}
                 {/* <SidebarItem label="Deudas" destination="/class" icon={MdAttachMoney} />*/}
             </ul>
