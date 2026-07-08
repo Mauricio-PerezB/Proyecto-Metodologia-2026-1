@@ -148,30 +148,11 @@ export async function downloadCertificateService(id, nombreAlumno) {
     doc.text(`Promedio de Simulaciones Teóricas: ${metadata.promedio}%`, width / 2, 128, { align: 'center' });
     doc.text('Examen Psicotécnico Práctico: APROBADO', width / 2, 134, { align: 'center' });
     
-    // 4. Fechas y Firmas
+    // 4. Fechas
     doc.setFont('helvetica', 'italic');
     doc.setFontSize(10);
     doc.setTextColor(100, 116, 139);
-    doc.text(`Expedido en Santiago de Chile, el ${metadata.fecha}.`, width / 2, 154, { align: 'center' });
-    
-    // Líneas de firma
-    doc.setDrawColor(148, 163, 184);
-    doc.setLineWidth(0.5);
-    
-    // Firma Izquierda
-    doc.line(45, 178, 115, 178);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.text('Director Académico', 80, 183, { align: 'center' });
-    doc.setFontSize(8);
-    doc.text('Academia de Formación', 80, 187, { align: 'center' });
-    
-    // Firma Derecha
-    doc.line(width - 115, 178, width - 45, 178);
-    doc.setFontSize(9);
-    doc.text('Instructor de Conducción', width - 80, 183, { align: 'center' });
-    doc.setFontSize(8);
-    doc.text('Firma Autorizada', width - 80, 187, { align: 'center' });
+    doc.text(`Expedido en Concepción, el ${metadata.fecha}.`, width / 2, 154, { align: 'center' });
     
     // Detalles de verificación en formato Courier
     doc.setFont('courier', 'normal');

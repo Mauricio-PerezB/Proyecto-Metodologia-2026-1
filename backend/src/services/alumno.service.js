@@ -225,7 +225,7 @@ acreditando el siguiente rendimiento académico de excelencia:
 Cumpliendo con los estándares de aprobación establecidos de un promedio igual
 o superior al 80% y examen psicotécnico apto.
 
-En fe de lo cual, se firma y expide el presente documento en Santiago de Chile.
+En fe de lo cual, se firma y expide el presente documento en Concepción.
 
                      Fecha de Emisión: ${fechaEmision}
                      Código de Verificación: ${certId}
