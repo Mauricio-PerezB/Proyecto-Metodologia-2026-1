@@ -1,14 +1,4 @@
 import { SidebarItem } from "./SidebarItem.jsx";
-<<<<<<< HEAD
-import {
-    MdHouse,
-    MdSchool,
-    MdAttachMoney,
-    MdShoppingCart,
-    MdAdminPanelSettings,
-    MdDirectionsCar,
-    MdLogout
-=======
 import { 
   MdHouse, 
   MdSchool, 
@@ -18,7 +8,6 @@ import {
   MdDirectionsCar,
   MdLogout,
   MdCalendarMonth
->>>>>>> bastian
 } from "react-icons/md";
 
 import { useAuth } from '@context/AuthContext';
