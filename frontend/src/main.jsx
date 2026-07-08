@@ -19,6 +19,7 @@ import GenerarQRProfesor from '@pages/GenerarQRProfesor';
 import EscanearQRAlumno from '@pages/EscanearQRAlumno';
 import VerAsistenciaProfesor from '@pages/VerAsistenciaProfesor';
 import GestionClasesAlumnos from '@pages/GestionClasesAlumnos';
+import ExamenPractico from '@pages/ExamenPractico';
 
 const router = createBrowserRouter([
   {
@@ -34,9 +35,9 @@ const router = createBrowserRouter([
         path: '/home',
         element: <Home />
       },
-       {
+      {
         path: '/planes',
-        element: <Plan/>
+        element: <Plan />
       },
       {
         path: '/comprar-clases',
@@ -55,7 +56,7 @@ const router = createBrowserRouter([
         element: <MisClases />
       },
       {
-         path: '/gestionar-ventas',
+        path: '/gestionar-ventas',
         element: <GestionarVentas />
       },
       {
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
       {
         path: '/ver-asistencia',
         element: <VerAsistenciaProfesor />
+      },
+      {
+        path: '/examenes-practicos',
+        element: <ExamenPractico />
       },
       /*{
         path: '/planes',

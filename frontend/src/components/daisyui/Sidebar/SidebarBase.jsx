@@ -1,19 +1,19 @@
 import { SidebarItem } from "./SidebarItem.jsx";
-import { 
-  MdHouse, 
-  MdSchool, 
-  MdAttachMoney, 
-  MdShoppingCart, 
-  MdAdminPanelSettings,
-  MdDirectionsCar,
-  MdLogout
+import {
+    MdHouse,
+    MdSchool,
+    MdAttachMoney,
+    MdShoppingCart,
+    MdAdminPanelSettings,
+    MdDirectionsCar,
+    MdLogout
 } from "react-icons/md";
 
 import { useAuth } from '@context/AuthContext';
 import { logout } from '@services/auth.service.js';
 import { useNavigate } from 'react-router-dom';
 
-export const SidebarBase = ({pageContent}) => {
+export const SidebarBase = ({ pageContent }) => {
     const { user } = useAuth();
     const navigate = useNavigate();
 
@@ -52,6 +52,7 @@ export const SidebarBase = ({pageContent}) => {
                     <>
                         <SidebarItem label="Mis Clases" destination="/mis-clases" icon={MdSchool} />
                         <SidebarItem label="Evaluaciones Internas" destination="/evaluaciones-internas" icon={MdSchool} />
+                        <SidebarItem label="Exámenes Prácticos" destination="/examenes-practicos" icon={MdDirectionsCar} />
                         <SidebarItem label="Generar QR Asistencia" destination="/generar-qr-clase" icon={MdSchool} />
                         <SidebarItem label="Ver Asistencias" destination="/ver-asistencia" icon={MdSchool} />
                     </>
@@ -59,6 +60,7 @@ export const SidebarBase = ({pageContent}) => {
                 {user?.rol === 'estudiante' && (
                     <>
                         <SidebarItem label="Mi Historial de Clases" destination="/historial-clases" icon={MdSchool} />
+                        <SidebarItem label="Mi Historial Exámenes" destination="/examenes-practicos" icon={MdDirectionsCar} />
                         <SidebarItem label="Registrar Asistencia (QR)" destination="/escanear-asistencia" icon={MdSchool} />
                     </>
                 )}
@@ -68,6 +70,7 @@ export const SidebarBase = ({pageContent}) => {
                         <SidebarItem label="Gestionar Planes" destination="/planes" icon={MdAdminPanelSettings} />
                         <SidebarItem label="Gestión de Vehículos" destination="/gestion-vehiculos" icon={MdDirectionsCar} />
                         <SidebarItem label="Evaluaciones Internas" destination="/evaluaciones-internas" icon={MdSchool} />
+                        <SidebarItem label="Exámenes Prácticos" destination="/examenes-practicos" icon={MdDirectionsCar} />
                     </>
                 )}
                 {/* <SidebarItem label="Deudas" destination="/class" icon={MdAttachMoney} />*/}
