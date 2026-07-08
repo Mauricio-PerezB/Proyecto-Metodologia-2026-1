@@ -20,8 +20,8 @@ export async function registrarMantenimiento(req, res) {
 
 export async function registrarVehiculo(req, res) {
     try {
-        const { patente, modelo, kilometrajeInicial } = req.body;
-        const nuevoVehiculo = await registrarNuevo(patente, modelo, kilometrajeInicial);
+        const { patente, modelo, transmision, kilometrajeInicial } = req.body;
+        const nuevoVehiculo = await registrarNuevo(patente, modelo, kilometrajeInicial, transmision);
         handleSuccess(res, 201, 'Vehículo creado correctamente', nuevoVehiculo);
     } catch (error) {
         if (error.message.includes('kilometraje inicial') || error.message.includes('patente ya existe')) {

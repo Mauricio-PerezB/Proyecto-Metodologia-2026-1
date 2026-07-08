@@ -7,7 +7,7 @@ import { Vehiculo } from "../entities/vehiculo.entity.js";
 
 const MIN_CLASES_PRACTICAS = 5;
 
-const TIPOS_VEHICULO = ["mecanico", "automatico"];
+const TIPOS_VEHICULO = ["manual", "automatico"];
 
 const FALTAS_LEVES = new Set([
   "L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "L10",
@@ -127,7 +127,7 @@ export async function programarExamenService(data) {
   if (!fechaHoraFin) throw new Error("La fecha y hora de término son obligatorias.");
 
   if (tipoVehiculo && !TIPOS_VEHICULO.includes(tipoVehiculo.toLowerCase())) {
-    throw new Error(`El tipo de vehículo debe ser "mecanico" o "automatico".`);
+    throw new Error(`El tipo de vehículo debe ser "manual" o "automatico".`);
   }
 
   if (kilometrajeInicial !== undefined && kilometrajeInicial !== null) {

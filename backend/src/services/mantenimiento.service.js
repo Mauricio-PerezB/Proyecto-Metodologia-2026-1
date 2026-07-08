@@ -2,7 +2,7 @@ import { AppDataSource } from "../config/configDB.js";
 import { Vehiculo } from "../entities/vehiculo.entity.js";
 import { HistorialMantenimiento } from "../entities/historialMantenimiento.entity.js";
 import { enviarAlertaMantenimiento } from "./email.service.js";
-export async function registrarNuevo(patente, modelo, kilometrajeInicial) {
+export async function registrarNuevo(patente, modelo, kilometrajeInicial, transmision) {
     const kilometraje = Number(kilometrajeInicial);
 
     if (isNaN(kilometraje) || kilometraje < 0) {
@@ -19,6 +19,7 @@ export async function registrarNuevo(patente, modelo, kilometrajeInicial) {
     const nuevoVehiculo = vehiculoRepository.create({
         patente,
         modelo,
+        transmision,
         kilometraje,
         estado: "Activo",
     });
@@ -59,6 +60,10 @@ export async function actualizarVehiculo(id, updates) {
 
     if (updates.modelo) {
         vehiculo.modelo = updates.modelo;
+    }
+
+    if (updates.transmision) {
+        vehiculo.transmision = updates.transmision;
     }
 
     if (updates.kilometraje !== undefined && updates.kilometraje !== null) {

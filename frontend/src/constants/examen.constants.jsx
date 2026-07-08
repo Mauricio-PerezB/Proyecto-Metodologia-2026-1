@@ -1,7 +1,7 @@
 export const MIN_CLASES_PRACTICAS = 5;
 
 export const TIPOS_VEHICULO = [
-    { value: 'mecanico', label: 'Mecánico' },
+    { value: 'manual', label: 'Manual' },
     { value: 'automatico', label: 'Automático' },
 ];
 

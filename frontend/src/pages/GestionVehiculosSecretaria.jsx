@@ -32,7 +32,8 @@ export default function GestionVehiculosSecretaria() {
   const [editingVehiculo, setEditingVehiculo] = useState(null);
   const [formData, setFormData] = useState({
     patente: '',
-    transmision: 'mecanico',
+    modelo: '',
+    transmision: 'manual',
     estado: 'disponible'
   });
 
@@ -73,7 +74,8 @@ export default function GestionVehiculosSecretaria() {
       if (editingVehiculo) {
         const payload = {
           patente: formData.patente,
-          modelo: formData.transmision,
+          modelo: formData.modelo,
+          transmision: formData.transmision,
           estado: formData.estado
         };
         const res = await updateVehiculo(editingVehiculo.id, payload);
@@ -81,7 +83,7 @@ export default function GestionVehiculosSecretaria() {
           alert("Vehículo actualizado exitosamente");
           setShowModal(false);
           setEditingVehiculo(null);
-          setFormData({ patente: '', transmision: 'mecanico', estado: 'disponible' });
+          setFormData({ patente: '', modelo: '', transmision: 'manual', estado: 'disponible' });
           cargarVehiculos();
         } else {
           alert(res?.message || "Error al actualizar vehículo");
@@ -89,14 +91,15 @@ export default function GestionVehiculosSecretaria() {
       } else {
         const payload = {
           patente: formData.patente,
-          modelo: formData.transmision,
+          modelo: formData.modelo,
+          transmision: formData.transmision,
           kilometrajeInicial: 0
         };
         const res = await createVehiculo(payload);
         if (res?.data) {
           alert("Vehículo registrado exitosamente");
           setShowModal(false);
-          setFormData({ patente: '', transmision: 'mecanico', estado: 'disponible' });
+          setFormData({ patente: '', modelo: '', transmision: 'manual', estado: 'disponible' });
           cargarVehiculos();
         } else {
           alert(res?.message || "Error al registrar vehículo");
@@ -201,7 +204,7 @@ export default function GestionVehiculosSecretaria() {
     <div className="max-w-5xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Gestión de Vehículos</h1>
-        <button className="btn btn-primary" onClick={() => { setEditingVehiculo(null); setFormData({ patente: '', transmision: 'mecanico', estado: 'disponible' }); setShowModal(true); }}>
+        <button className="btn btn-primary" onClick={() => { setEditingVehiculo(null); setFormData({ patente: '', modelo: '', transmision: 'manual', estado: 'disponible' }); setShowModal(true); }}>
           + Agregar Vehículo
         </button>
       </div>
@@ -218,7 +221,8 @@ export default function GestionVehiculosSecretaria() {
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <th className="px-4 py-3 text-sm font-medium text-gray-600">ID</th>
                   <th className="px-4 py-3 text-sm font-medium text-gray-600">Patente</th>
-                  <th className="px-4 py-3 text-sm font-medium text-gray-600">Modelo/Transmisión</th>
+                  <th className="px-4 py-3 text-sm font-medium text-gray-600">Modelo</th>
+                  <th className="px-4 py-3 text-sm font-medium text-gray-600">Transmisión</th>
                   <th className="px-4 py-3 text-sm font-medium text-gray-600">Kilometraje</th>
                   <th className="px-4 py-3 text-sm font-medium text-gray-600">Estado</th>
                   <th className="px-4 py-3 text-sm font-medium text-gray-600 text-right">Acciones</th>
@@ -229,7 +233,8 @@ export default function GestionVehiculosSecretaria() {
                   <tr key={vehiculo.id} className="border-b border-gray-100 hover:bg-gray-50">
                     <td className="px-4 py-3 text-sm text-gray-500">{vehiculo.id}</td>
                     <td className="px-4 py-3 text-sm text-gray-900 font-medium">{vehiculo.patente}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700 uppercase">{vehiculo.modelo || vehiculo.transmision}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700 uppercase">{vehiculo.modelo}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700 uppercase">{vehiculo.transmision}</td>
                     <td className="px-4 py-3 text-sm text-gray-700 font-semibold">{vehiculo.kilometraje ? `${vehiculo.kilometraje} km` : '0 km'}</td>
                     <td className="px-4 py-3">
                       <span className="px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
@@ -267,7 +272,8 @@ export default function GestionVehiculosSecretaria() {
                           setEditingVehiculo(vehiculo);
                           setFormData({ 
                             patente: vehiculo.patente, 
-                            transmision: vehiculo.modelo || vehiculo.transmision || 'mecanico',
+                            modelo: vehiculo.modelo || '',
+                            transmision: vehiculo.transmision || 'manual',
                             estado: vehiculo.estado || 'disponible'
                           });
                           setShowModal(true);
@@ -360,13 +366,25 @@ export default function GestionVehiculosSecretaria() {
               </div>
 
               <div>
+                <label className="block text-sm font-medium text-gray-700">Modelo</label>
+                <input 
+                  required 
+                  type="text" 
+                  placeholder="Ej: Toyota Yaris"
+                  className="input input-bordered w-full mt-1" 
+                  value={formData.modelo} 
+                  onChange={e => setFormData({...formData, modelo: e.target.value})} 
+                />
+              </div>
+
+              <div>
                 <label className="block text-sm font-medium text-gray-700">Transmisión</label>
                 <select 
                   className="select select-bordered w-full mt-1" 
                   value={formData.transmision} 
                   onChange={e => setFormData({...formData, transmision: e.target.value})}
                 >
-                  <option value="mecanico">Manual</option>
+                  <option value="manual">Manual</option>
                   <option value="automatico">Automático</option>
                 </select>
               </div>

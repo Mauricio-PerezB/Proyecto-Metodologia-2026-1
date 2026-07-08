@@ -20,6 +20,12 @@ export const Vehiculo = new EntitySchema({
       length: 100,
       nullable: false,
     },
+    transmision: {
+      type: "varchar",
+      length: 20,
+      nullable: false,
+      default: "manual",
+    },
     kilometraje: {
       type: "int",
       nullable: false,
