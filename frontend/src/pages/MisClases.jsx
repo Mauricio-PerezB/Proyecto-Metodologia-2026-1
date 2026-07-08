@@ -114,7 +114,7 @@ const MisClases = () => {
                             <input
                                 type="text"
                                 placeholder="Buscar clases..."
-                                className="w-full pl-10 pr-4 py-3 bg-white border-2 border-slate-100 rounded-xl text-slate-800 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 focus:outline-none transition-all duration-200"
+                                className="w-full pl-10 pr-4 py-3 bg-white border-2 border-slate-100 rounded-xl text-slate-800 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none transition-all duration-200"
                                 value={buscar}
                                 onChange={(e) => {
                                     setBuscar(e.target.value);
@@ -130,7 +130,7 @@ const MisClases = () => {
                                 Limpiar
                             </button>
                         )}
-                        {isLoading && <span className="loading loading-spinner text-emerald-500"></span>}
+                        {isLoading && <span className="loading loading-spinner text-blue-500"></span>}
                     </div>
                 </div>
 
@@ -145,7 +145,7 @@ const MisClases = () => {
                         {currentPageContent.map((clase) => (
                             <div key={clase.id_clase} className="bg-white rounded-3xl shadow-lg shadow-slate-200/40 border border-slate-100 p-6 flex flex-col transition-transform hover:-translate-y-1 duration-300">
                                 <div className="flex justify-between items-start mb-4">
-                                    <div className="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                                    <div className="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                                         {clase.tipo}
                                     </div>
                                     <div className="text-slate-400">

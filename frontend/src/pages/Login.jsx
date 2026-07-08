@@ -212,32 +212,22 @@ const Login = () => {
     return (
         <div className="min-h-screen flex bg-slate-50 font-sans">
             {/* Panel Izquierdo - Branding & Decoración */}
-            <div className="hidden lg:flex lg:flex-1 relative bg-gradient-to-br from-emerald-600 to-teal-900 items-center justify-center overflow-hidden">
+            <div className="hidden lg:flex lg:flex-1 relative bg-gradient-to-br from-blue-800 to-slate-900 items-center justify-center overflow-hidden">
                 {/* Elementos decorativos abstractos */}
                 <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-[radial-gradient(circle_at_top_left,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
-                <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-teal-500 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
-                <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
+                <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
+                <div className="absolute -top-32 -left-32 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
                 
                 <div className="relative z-10 p-16 flex flex-col items-start justify-center h-full max-w-xl text-white">
-                    <div className="inline-flex items-center justify-center p-3 bg-white/10 backdrop-blur-md rounded-2xl mb-8 border border-white/20 shadow-xl">
-                        <svg className="w-8 h-8 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                    <div className="mb-10 flex items-center justify-center">
+                        <img src="/logo.svg" alt="Surcentral Logo" className="h-64 w-auto object-contain drop-shadow-2xl" />
                     </div>
                     <h1 className="text-5xl font-extrabold mb-6 tracking-tight leading-tight">
-                        Tu camino hacia la <span className="text-emerald-300">libertad</span> comienza aquí
+                        Formando conductores con <span className="text-blue-300">responsabilidad</span>
                     </h1>
-                    <p className="text-lg text-emerald-50 mb-10 leading-relaxed font-light">
-                        Escuela de conducción profesional. Obtén tu licencia tipo A y B con los mejores instructores y vehículos modernos.
+                    <p className="text-lg text-blue-50 mb-10 leading-relaxed font-light">
+                        Escuela de conducción profesional Surcentral. Aprende con instructores calificados y vehículos modernos para obtener tu licencia con total confianza y seguridad.
                     </p>
-                    <div className="flex items-center space-x-4">
-                        <div className="flex -space-x-4">
-                            {[1, 2, 3].map((i) => (
-                                <div key={i} className={`w-10 h-10 rounded-full border-2 border-emerald-800 bg-emerald-200 flex items-center justify-center`} style={{ zIndex: 4-i }}>
-                                    <span className="text-xs text-emerald-800 font-bold">★</span>
-                                </div>
-                            ))}
-                        </div>
-                        <p className="text-sm font-medium text-emerald-100">+500 alumnos aprobados</p>
-                    </div>
                 </div>
             </div>
 
@@ -264,7 +254,7 @@ const Login = () => {
                                         className={`w-full px-5 py-4 bg-slate-50 border-2 rounded-xl text-slate-800 focus:bg-white focus:outline-none transition-all duration-200 placeholder-slate-400
                                             ${errors.email || errorEmail 
                                                 ? 'border-red-400 focus:border-red-500 focus:ring-4 focus:ring-red-100' 
-                                                : 'border-slate-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100'}`}
+                                                : 'border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100'}`}
                                         autoComplete="email"
                                         required
                                     />
@@ -289,13 +279,13 @@ const Login = () => {
                                             className={`w-full px-5 py-4 bg-slate-50 border-2 rounded-xl text-slate-800 focus:bg-white focus:outline-none transition-all duration-200 placeholder-slate-400 pr-12
                                                 ${errors.password || errorPassword 
                                                     ? 'border-red-400 focus:border-red-500 focus:ring-4 focus:ring-red-100' 
-                                                    : 'border-slate-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100'}`}
+                                                    : 'border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100'}`}
                                             required
                                         />
                                         <button
                                             type="button"
                                             onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-emerald-600 transition-colors"
+                                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-blue-600 transition-colors"
                                         >
                                             {showPassword ? <EyeOff size={22} /> : <Eye size={22} />}
                                         </button>
@@ -315,7 +305,7 @@ const Login = () => {
                                         className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all duration-300
                                             ${isLoading
                                                 ? 'bg-slate-400 cursor-not-allowed'
-                                                : 'bg-emerald-600 hover:bg-emerald-700 hover:shadow-emerald-500/30 hover:-translate-y-0.5 active:translate-y-0'
+                                                : 'bg-blue-600 hover:bg-blue-700 hover:shadow-blue-500/30 hover:-translate-y-0.5 active:translate-y-0'
                                             }`}
                                     >
                                         {isLoading ? (
@@ -338,7 +328,7 @@ const Login = () => {
                                     ¿No tienes cuenta?{' '}
                                     <button 
                                         onClick={() => { setIsPreRegister(true); setPreRegisterSuccess(''); setPreRegisterError(''); }}
-                                        className="font-bold text-emerald-600 hover:text-emerald-700 hover:underline transition-colors"
+                                        className="font-bold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
                                     >
                                         Preinscríbete aquí
                                     </button>
@@ -353,9 +343,9 @@ const Login = () => {
                             </div>
 
                             {preRegisterSuccess && (
-                                <div className="p-4 mb-6 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start">
-                                    <svg className="w-5 h-5 text-emerald-600 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-                                    <p className="text-sm font-medium text-emerald-800">{preRegisterSuccess}</p>
+                                <div className="p-4 mb-6 rounded-xl bg-blue-50 border border-blue-200 flex items-start">
+                                    <svg className="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                                    <p className="text-sm font-medium text-blue-800">{preRegisterSuccess}</p>
                                 </div>
                             )}
 
@@ -381,7 +371,7 @@ const Login = () => {
                                                     field === 'email' ? 'Correo Electrónico' :
                                                     'Teléfono'
                                                 }
-                                                className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 focus:outline-none transition-all duration-200 placeholder-slate-400 text-sm"
+                                                className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none transition-all duration-200 placeholder-slate-400 text-sm"
                                                 required
                                             />
                                         </div>
@@ -395,7 +385,7 @@ const Login = () => {
                                             name="fechaNacimiento"
                                             value={preRegisterData.fechaNacimiento}
                                             onChange={handlePreRegisterChange}
-                                            className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 focus:outline-none transition-all duration-200 text-sm"
+                                            className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none transition-all duration-200 text-sm"
                                             required
                                         />
                                     </div>
@@ -407,7 +397,7 @@ const Login = () => {
                                             value={preRegisterData.sede}
                                             onChange={handlePreRegisterChange}
                                             placeholder="Sede"
-                                            className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 focus:outline-none transition-all duration-200 text-sm"
+                                            className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none transition-all duration-200 text-sm"
                                             required
                                         />
                                     </div>
@@ -419,7 +409,7 @@ const Login = () => {
                                             name="id_plan"
                                             value={preRegisterData.id_plan}
                                             onChange={handlePreRegisterChange}
-                                            className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 focus:outline-none transition-all duration-200 text-sm"
+                                            className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none transition-all duration-200 text-sm"
                                             required
                                         >
                                             <option value="" disabled>Selecciona un plan</option>
@@ -437,7 +427,7 @@ const Login = () => {
                                             name="comprobante"
                                             onChange={handlePreRegisterChange}
                                             accept="image/*,.pdf"
-                                            className="w-full px-4 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 focus:outline-none transition-all duration-200 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
+                                            className="w-full px-4 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-slate-800 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none transition-all duration-200 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                                             required
                                         />
                                     </div>
@@ -450,7 +440,7 @@ const Login = () => {
                                         name="aceptaTerminos"
                                         checked={preRegisterData.aceptaTerminos}
                                         onChange={handlePreRegisterChange}
-                                        className="w-5 h-5 text-emerald-600 bg-slate-100 border-slate-300 rounded focus:ring-emerald-500"
+                                        className="w-5 h-5 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500"
                                     />
                                     <label htmlFor="terminos" className="text-sm text-slate-600 font-medium cursor-pointer">
                                         Acepto los términos, condiciones y tratamiento de mis datos personales (RUT/Email).
@@ -464,7 +454,7 @@ const Login = () => {
                                         className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all duration-300
                                             ${isLoading
                                                 ? 'bg-slate-400 cursor-not-allowed'
-                                                : 'bg-emerald-600 hover:bg-emerald-700 hover:shadow-emerald-500/30 hover:-translate-y-0.5 active:translate-y-0'
+                                                : 'bg-blue-600 hover:bg-blue-700 hover:shadow-blue-500/30 hover:-translate-y-0.5 active:translate-y-0'
                                             }`}
                                     >
                                         {isLoading ? 'ENVIANDO...' : 'ENVIAR SOLICITUD'}
@@ -477,7 +467,7 @@ const Login = () => {
                                     ¿Ya tienes cuenta?{' '}
                                     <button 
                                         onClick={() => { setIsPreRegister(false); setPreRegisterSuccess(''); setPreRegisterError(''); }}
-                                        className="font-bold text-emerald-600 hover:text-emerald-700 hover:underline transition-colors"
+                                        className="font-bold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
                                     >
                                         Inicia sesión
                                     </button>

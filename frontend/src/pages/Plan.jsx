@@ -36,7 +36,7 @@ const Plan = () => {
 
                     <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
                         <button 
-                            className="w-full md:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold shadow-lg shadow-emerald-500/30 transition-all hover:-translate-y-0.5"
+                            className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-500/30 transition-all hover:-translate-y-0.5"
                             onClick={() => handleCreatePlan(fetchPlanes)}
                         >
                             + Crear Plan
@@ -81,7 +81,7 @@ const Plan = () => {
                                         <tr key={plan.id_plan} className="hover:bg-slate-50/50 transition-colors">
                                             <td className="px-6 py-4 font-mono font-medium text-slate-400">{plan.id_plan}</td>
                                             <td className="px-6 py-4 font-bold text-slate-800">{plan.nombre}</td>
-                                            <td className="px-6 py-4 font-bold text-emerald-600">${plan.costo}</td>
+                                            <td className="px-6 py-4 font-bold text-blue-600">${plan.costo}</td>
                                             <td className="px-6 py-4 font-medium">{plan.duracion_semanas} sem</td>
                                             <td className="px-6 py-4">
                                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700">
@@ -92,7 +92,7 @@ const Plan = () => {
                                                 <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide
                                                     ${plan.tipo === 'teorico' ? 'bg-blue-100 text-blue-800' :
                                                       plan.tipo === 'practico' ? 'bg-amber-100 text-amber-800' :
-                                                      'bg-emerald-100 text-emerald-800'
+                                                      'bg-blue-100 text-blue-800'
                                                     }`}>
                                                     {plan.tipo}
                                                 </span>
