@@ -12,36 +12,36 @@ export const PreRegistro = new EntitySchema({
     nombreCompleto: {
       type: "varchar",
       length: 255,
-      nullable: false,
+      nullable: true,
     },
     rut: {
       type: "varchar",
       length: 20,
-      nullable: false,
+      nullable: true,
     },
     email: {
       type: "varchar",
       length: 255,
-      nullable: false,
+      nullable: true,
     },
     telefono: {
       type: "varchar",
       length: 20,
-      nullable: false,
+      nullable: true,
     },
     fechaNacimiento: {
       type: "date",
-      nullable: false,
+      nullable: true,
     },
     sede: {
       type: "varchar",
       length: 100,
-      nullable: false,
+      nullable: true,
     },
     comprobantePagoUrl: {
       type: "varchar",
       length: 500,
-      nullable: false,
+      nullable: true,
     },
     estado: {
       type: "varchar",

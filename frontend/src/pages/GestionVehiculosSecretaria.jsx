@@ -19,6 +19,15 @@ export default function GestionVehiculosSecretaria() {
     descripcion: ''
   });
 
+  const [showHistorialModal, setShowHistorialModal] = useState(false);
+  const [historialVehiculo, setHistorialVehiculo] = useState([]);
+  const [showResolverModal, setShowResolverModal] = useState(false);
+  const [resolverData, setResolverData] = useState({
+    idHistorial: null,
+    costoReparacion: '',
+    detalleReparacion: ''
+  });
+
   const [showModal, setShowModal] = useState(false);
   const [editingVehiculo, setEditingVehiculo] = useState(null);
   const [formData, setFormData] = useState({
@@ -62,7 +71,12 @@ export default function GestionVehiculosSecretaria() {
     e.preventDefault();
     try {
       if (editingVehiculo) {
-        const res = await updateVehiculo(editingVehiculo.id, formData);
+        const payload = {
+          patente: formData.patente,
+          modelo: formData.transmision,
+          estado: formData.estado
+        };
+        const res = await updateVehiculo(editingVehiculo.id, payload);
         if (res?.data || res?.status === "Success" || res?.message) {
           alert("Vehículo actualizado exitosamente");
           setShowModal(false);
@@ -73,7 +87,12 @@ export default function GestionVehiculosSecretaria() {
           alert(res?.message || "Error al actualizar vehículo");
         }
       } else {
-        const res = await createVehiculo(formData);
+        const payload = {
+          patente: formData.patente,
+          modelo: formData.transmision,
+          kilometrajeInicial: 0
+        };
+        const res = await createVehiculo(payload);
         if (res?.data) {
           alert("Vehículo registrado exitosamente");
           setShowModal(false);
@@ -119,7 +138,7 @@ export default function GestionVehiculosSecretaria() {
   const submitFalla = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/mantenimiento', {
+      const response = await axios.post('/vehiculos', {
         idVehiculo: fallaData.idVehiculo,
         nuevoKilometraje: Number(fallaData.kilometraje),
         reporteFalla: {
@@ -127,15 +146,44 @@ export default function GestionVehiculosSecretaria() {
           descripcion: fallaData.descripcion
         }
       });
-      if (response.data.exito) {
-        alert(response.data.mensaje);
+      if (response.data.status === 'Success') {
+        alert(response.data.message);
         setShowFallaModal(false);
         cargarVehiculos();
       } else {
-        alert(response.data.mensaje || "Error al reportar la falla.");
+        alert(response.data.message || "Error al reportar la falla.");
       }
     } catch (error) {
-      alert("Error de conexión al reportar la falla.");
+      alert(error.response?.data?.message || "Error de conexión al reportar la falla.");
+    }
+  };
+
+  const verHistorial = async (idVehiculo) => {
+    try {
+      const res = await axios.get(`/vehiculos/${idVehiculo}/historial`);
+      if (res.data.data) {
+        setHistorialVehiculo(res.data.data);
+        setShowHistorialModal(true);
+      }
+    } catch (err) {
+      alert("Error al cargar historial");
+    }
+  };
+
+  const submitResolver = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post('/vehiculos/resolver', resolverData);
+      if (res.data.data || res.data.status === 'Success') {
+        alert("Mantenimiento resuelto exitosamente.");
+        setShowResolverModal(false);
+        setShowHistorialModal(false);
+        cargarVehiculos();
+      } else {
+        alert("Error al resolver el mantenimiento");
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Error al conectar con el servidor");
     }
   };
 
@@ -170,7 +218,8 @@ export default function GestionVehiculosSecretaria() {
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <th className="px-4 py-3 text-sm font-medium text-gray-600">ID</th>
                   <th className="px-4 py-3 text-sm font-medium text-gray-600">Patente</th>
-                  <th className="px-4 py-3 text-sm font-medium text-gray-600">Transmisión</th>
+                  <th className="px-4 py-3 text-sm font-medium text-gray-600">Modelo/Transmisión</th>
+                  <th className="px-4 py-3 text-sm font-medium text-gray-600">Kilometraje</th>
                   <th className="px-4 py-3 text-sm font-medium text-gray-600">Estado</th>
                   <th className="px-4 py-3 text-sm font-medium text-gray-600 text-right">Acciones</th>
                 </tr>
@@ -179,20 +228,27 @@ export default function GestionVehiculosSecretaria() {
                 {vehiculos.map((vehiculo) => (
                   <tr key={vehiculo.id} className="border-b border-gray-100 hover:bg-gray-50">
                     <td className="px-4 py-3 text-sm text-gray-500">{vehiculo.id}</td>
-                    <td className="px-4 py-3 text-sm font-medium text-gray-900">{vehiculo.patente}</td>
-                    <td className="px-4 py-3 text-sm text-gray-700 uppercase">{vehiculo.transmision}</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 font-medium">{vehiculo.patente}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700 uppercase">{vehiculo.modelo || vehiculo.transmision}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700 font-semibold">{vehiculo.kilometraje ? `${vehiculo.kilometraje} km` : '0 km'}</td>
                     <td className="px-4 py-3">
                       <span className="px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
                         {vehiculo.estado || 'DISPONIBLE'}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right space-x-2">
-                      {vehiculo.estado === 'inactivo' ? (
+                      <button 
+                        className="btn btn-sm btn-secondary text-white"
+                        onClick={() => verHistorial(vehiculo.id)}
+                      >
+                        Historial
+                      </button>
+                      {vehiculo.estado === 'inactivo' || vehiculo.estado === 'En Mantenimiento' ? (
                         <button 
                           className="btn btn-sm btn-success text-white"
                           onClick={() => handleDarDeAlta(vehiculo.id)}
                         >
-                          Dar de Alta
+                          Forzar Alta
                         </button>
                       ) : (
                         <button 
@@ -211,7 +267,7 @@ export default function GestionVehiculosSecretaria() {
                           setEditingVehiculo(vehiculo);
                           setFormData({ 
                             patente: vehiculo.patente, 
-                            transmision: vehiculo.transmision,
+                            transmision: vehiculo.modelo || vehiculo.transmision || 'mecanico',
                             estado: vehiculo.estado || 'disponible'
                           });
                           setShowModal(true);
@@ -383,6 +439,96 @@ export default function GestionVehiculosSecretaria() {
               <div className="flex justify-end gap-2 mt-6">
                 <button type="button" className="btn btn-ghost" onClick={() => setShowFallaModal(false)}>Cancelar</button>
                 <button type="submit" className="btn btn-error text-white">Enviar Reporte</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* Modal Historial */}
+      {showHistorialModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-3xl">
+            <h2 className="text-2xl font-bold mb-4">Historial de Mantenimientos</h2>
+            <div className="overflow-x-auto max-h-96">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-50 border-b border-gray-200">
+                    <th className="px-4 py-3 text-sm font-medium text-gray-600">Fecha</th>
+                    <th className="px-4 py-3 text-sm font-medium text-gray-600">Kilometraje</th>
+                    <th className="px-4 py-3 text-sm font-medium text-gray-600">Falla</th>
+                    <th className="px-4 py-3 text-sm font-medium text-gray-600">Costo</th>
+                    <th className="px-4 py-3 text-sm font-medium text-gray-600">Estado</th>
+                    <th className="px-4 py-3 text-sm font-medium text-gray-600 text-right">Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {historialVehiculo.map(hist => (
+                    <tr key={hist.id} className="border-b border-gray-100 hover:bg-gray-50">
+                      <td className="px-4 py-3 text-sm">{new Date(hist.fechaReporte).toLocaleDateString()}</td>
+                      <td className="px-4 py-3 text-sm">{hist.kilometraje} km</td>
+                      <td className="px-4 py-3 text-sm">{hist.descripcionFalla || 'Sin detalle'}</td>
+                      <td className="px-4 py-3 text-sm">{hist.costoReparacion ? `$${hist.costoReparacion}` : '-'}</td>
+                      <td className="px-4 py-3">
+                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${hist.estado === 'Pendiente' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}>
+                          {hist.estado}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        {hist.estado === 'Pendiente' && (
+                          <button 
+                            className="btn btn-sm btn-success text-white"
+                            onClick={() => {
+                              setResolverData({ idHistorial: hist.id, costoReparacion: '', detalleReparacion: '' });
+                              setShowResolverModal(true);
+                            }}
+                          >
+                            Resolver
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {historialVehiculo.length === 0 && (
+                <div className="text-center py-6 text-gray-500">No hay mantenimientos registrados.</div>
+              )}
+            </div>
+            <div className="flex justify-end gap-2 mt-6">
+              <button className="btn btn-ghost" onClick={() => setShowHistorialModal(false)}>Cerrar</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Resolver Falla */}
+      {showResolverModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[60]">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h2 className="text-2xl font-bold mb-4 text-green-600">Resolver Mantenimiento</h2>
+            <form onSubmit={submitResolver} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Costo de Reparación ($)</label>
+                <input 
+                  type="number" 
+                  className="input input-bordered w-full mt-1" 
+                  value={resolverData.costoReparacion} 
+                  onChange={e => setResolverData({...resolverData, costoReparacion: e.target.value})} 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Detalle de Reparación</label>
+                <textarea 
+                  required
+                  className="textarea textarea-bordered w-full mt-1" 
+                  rows="3"
+                  value={resolverData.detalleReparacion} 
+                  onChange={e => setResolverData({...resolverData, detalleReparacion: e.target.value})} 
+                ></textarea>
+              </div>
+              <div className="flex justify-end gap-2 mt-6">
+                <button type="button" className="btn btn-ghost" onClick={() => setShowResolverModal(false)}>Cancelar</button>
+                <button type="submit" className="btn btn-success text-white">Confirmar Resolución</button>
               </div>
             </form>
           </div>
