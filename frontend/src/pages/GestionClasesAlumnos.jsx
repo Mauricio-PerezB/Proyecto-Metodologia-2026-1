@@ -29,7 +29,7 @@ const GestionClasesAlumnos = () => {
     const [Clases, fetchClase] = useGetClase(claseData, setClaseData);
 
     // Funcionalidad de crear clase conectada al botón "+ Agendar Clase"
-    const { handleCreateClase } = useCreateClase(setClaseData, profesores, vehiculoList, alumnoList);
+    const { handleCreateClase } = useCreateClase(fetchClase, profesores, vehiculoList, alumnoList);
     const { handleEditClase } = editClase(fetchClase, profesores, vehiculoList, alumnoList);
 
     const [buscar, setBuscar] = useState("");
