@@ -1,7 +1,6 @@
 "use strict";
 import { DataSource } from "typeorm";
 import { DATABASE, DB_USERNAME, HOST, PASSWORD, DB_PORT } from "./configEnv.js";
-
 import { User } from "../entities/user.entity.js";
 import { Clase } from "../entities/clase.entity.js";
 import { PreRegistro } from "../entities/preregistro.entity.js";
@@ -11,6 +10,7 @@ import { ExamenPractico } from "../entities/examen.entity.js";
 import { ExamenPsicotecnico } from "../entities/examenPsicotecnico.entity.js";
 import { TestTeorico } from "../entities/testTeorico.entity.js";
 import { Plan } from "../entities/plan.entity.js";
+import { HistorialMantenimiento } from "../entities/historialMantenimiento.entity.js";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -29,6 +29,7 @@ export const AppDataSource = new DataSource({
     PreRegistro,
     TestTeorico,
     Plan,
+    HistorialMantenimiento,
   ],
   synchronize: true,
   logging: false,

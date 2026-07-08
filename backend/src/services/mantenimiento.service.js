@@ -1,6 +1,7 @@
 import { AppDataSource } from "../config/configDB.js";
 import { Vehiculo } from "../entities/vehiculo.entity.js";
-
+import { HistorialMantenimiento } from "../entities/historialMantenimiento.entity.js";
+import { enviarAlertaMantenimiento } from "./email.service.js";
 export async function registrarNuevo(patente, modelo, kilometrajeInicial) {
     const kilometraje = Number(kilometrajeInicial);
 
@@ -109,12 +110,21 @@ export async function registrarEstadoVehiculoService(idVehiculo, nuevoKilometraj
 
         //  Gestión de Fallas y Notificación
         if (reporteFalla && reporteFalla.gravedad) {
-            // Actualmente la entidad Vehiculo no almacena historial de fallas. 
-            // Si la falla es grave, cambiamos el estado a Inactivo (o En Mantenimiento).
+            const historialRepo = AppDataSource.getRepository(HistorialMantenimiento);
+            const nuevoHistorial = historialRepo.create({
+                vehiculo: vehiculo,
+                kilometraje: nuevoKilometraje,
+                gravedad: reporteFalla.gravedad,
+                descripcionFalla: reporteFalla.descripcion || '',
+                estado: 'Pendiente'
+            });
+            await historialRepo.save(nuevoHistorial);
+
             if (reporteFalla.gravedad === 'Alta') {
-                vehiculo.estado = 'Inactivo';
+                vehiculo.estado = 'En Mantenimiento';
                 alertaEnviada = true;
-                console.log(`[NOTIFICACIÓN] Alerta: El vehículo ${vehiculo.patente} ha sido puesto 'Inactivo' por falla grave.`);
+                await enviarAlertaMantenimiento(vehiculo.patente, reporteFalla, nuevoKilometraje);
+                console.log(`[NOTIFICACIÓN] Alerta: El vehículo ${vehiculo.patente} ha sido puesto 'En Mantenimiento' por falla grave.`);
             }
         }
 
@@ -135,4 +145,43 @@ export async function registrarEstadoVehiculoService(idVehiculo, nuevoKilometraj
     } catch (error) {
         throw new Error(error.message);
     }
+}
+
+export async function obtenerHistorialPorVehiculo(idVehiculo) {
+    const historialRepo = AppDataSource.getRepository(HistorialMantenimiento);
+    return await historialRepo.find({
+        where: { vehiculo: { id: idVehiculo } },
+        order: { fechaReporte: "DESC" }
+    });
+}
+
+export async function resolverMantenimiento(idHistorial, costoReparacion, detalleReparacion) {
+    const historialRepo = AppDataSource.getRepository(HistorialMantenimiento);
+    const historial = await historialRepo.findOne({
+        where: { id: idHistorial },
+        relations: ["vehiculo"]
+    });
+
+    if (!historial) {
+        throw new Error("Registro de historial no encontrado");
+    }
+
+    if (historial.estado === "Resuelto") {
+        throw new Error("Este mantenimiento ya fue resuelto");
+    }
+
+    historial.estado = "Resuelto";
+    historial.fechaResolucion = new Date();
+    historial.costoReparacion = costoReparacion ? Number(costoReparacion) : null;
+    historial.detalleReparacion = detalleReparacion || '';
+
+    await historialRepo.save(historial);
+
+    // Cambiar estado del vehículo a Activo/Disponible
+    const vehiculo = historial.vehiculo;
+    vehiculo.estado = "disponible";
+    const vehiculoRepository = AppDataSource.getRepository(Vehiculo);
+    await vehiculoRepository.save(vehiculo);
+
+    return historial;
 }
