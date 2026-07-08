@@ -19,6 +19,7 @@ import GenerarQRProfesor from '@pages/GenerarQRProfesor';
 import EscanearQRAlumno from '@pages/EscanearQRAlumno';
 import VerAsistenciaProfesor from '@pages/VerAsistenciaProfesor';
 import GestionClasesAlumnos from '@pages/GestionClasesAlumnos';
+import MisClasesFuturas from '@pages/MisClasesFuturas';
 
 const router = createBrowserRouter([
   {
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
       {
         path: '/ver-asistencia',
         element: <VerAsistenciaProfesor />
+      },
+      {
+        path: '/mis-clases-futuras',
+        element: <MisClasesFuturas />
       },
       /*{
         path: '/planes',

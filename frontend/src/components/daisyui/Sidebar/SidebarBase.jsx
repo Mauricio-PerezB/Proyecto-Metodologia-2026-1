@@ -6,7 +6,8 @@ import {
   MdShoppingCart, 
   MdAdminPanelSettings,
   MdDirectionsCar,
-  MdLogout
+  MdLogout,
+  MdCalendarMonth
 } from "react-icons/md";
 
 import { useAuth } from '@context/AuthContext';
@@ -59,6 +60,7 @@ export const SidebarBase = ({pageContent}) => {
                 {user?.rol === 'estudiante' && (
                     <>
                         <SidebarItem label="Mi Historial de Clases" destination="/historial-clases" icon={MdSchool} />
+                        <SidebarItem label="Mis Clases Futuras" destination="/mis-clases-futuras" icon={MdCalendarMonth} />
                         <SidebarItem label="Registrar Asistencia (QR)" destination="/escanear-asistencia" icon={MdSchool} />
                     </>
                 )}

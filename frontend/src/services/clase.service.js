@@ -74,4 +74,12 @@ export async function editAssignsClase(id_clase, idsEliminar = []){
     }
 }
 
-
+export async function getClasesStudentService() {
+    try {
+        const response = await axios.get('/clases');
+        return response.data.data || [];
+    } catch (error) {
+        console.error('Error al obtener clases del alumno', error);
+        return [];
+    }
+}
