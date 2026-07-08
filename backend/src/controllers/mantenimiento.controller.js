@@ -1,4 +1,4 @@
-import { registrarEstadoVehiculoService, registrarNuevo, obtenerVehiculos as obtenerVehiculosService, obtenerVehiculoPorId as obtenerVehiculoPorIdService, obtenerVehiculosEnMantenimiento as obtenerVehiculosEnMantenimientoService, actualizarVehiculo as actualizarVehiculoService, eliminarVehiculo as eliminarVehiculoService } from '../services/mantenimiento.service.js';
+import { registrarEstadoVehiculoService, registrarNuevo, obtenerVehiculos as obtenerVehiculosService, obtenerVehiculoPorId as obtenerVehiculoPorIdService, obtenerVehiculosEnMantenimiento as obtenerVehiculosEnMantenimientoService, actualizarVehiculo as actualizarVehiculoService, eliminarVehiculo as eliminarVehiculoService, obtenerHistorialPorVehiculo, resolverMantenimiento as resolverMantenimientoService } from '../services/mantenimiento.service.js';
 import { handleSuccess, handleErrorServer, handleErrorClient } from '../Handlers/responseHandlers.js';
 
 export async function registrarMantenimiento(req, res) {
@@ -91,5 +91,29 @@ export async function obtenerVehiculoPorId(req, res) {
         handleSuccess(res, 200, 'Vehículo obtenido correctamente', vehiculo);
     } catch (error) {
         handleErrorServer(res, 500, 'Error interno del servidor al obtener el vehículo', error.message);
+    }
+}
+
+export async function obtenerHistorial(req, res) {
+    try {
+        const { id } = req.params;
+        const historial = await obtenerHistorialPorVehiculo(Number(id));
+        handleSuccess(res, 200, 'Historial obtenido correctamente', historial);
+    } catch (error) {
+        handleErrorServer(res, 500, 'Error interno del servidor al obtener el historial', error.message);
+    }
+}
+
+export async function resolverMantenimiento(req, res) {
+    try {
+        const { idHistorial, costoReparacion, detalleReparacion } = req.body;
+        const historial = await resolverMantenimientoService(Number(idHistorial), costoReparacion, detalleReparacion);
+        handleSuccess(res, 200, 'Mantenimiento resuelto correctamente', historial);
+    } catch (error) {
+        if (error.message.includes('no encontrado') || error.message.includes('ya fue resuelto')) {
+            handleErrorClient(res, 400, error.message);
+        } else {
+            handleErrorServer(res, 500, 'Error interno del servidor al resolver el mantenimiento', error.message);
+        }
     }
 }
