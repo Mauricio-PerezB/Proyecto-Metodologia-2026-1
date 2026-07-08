@@ -2,10 +2,27 @@ import { patchClaseService } from "@services/clase.service.js";
 import Swal from "sweetalert2";
 import { createSwalField, createSwalDateField } from "../utils/swalField.jsx";
 import { fireDynamicSwal } from "../utils/dynamicSwal.jsx";
-import { StaticDropdownList } from "../utils/DropdownList.jsx";
 import { ESTADO_CLASE, CLASE_TEORICA, CLASE_PRACTICA } from "../../constants/clase.constants.jsx";
 import { gebi } from "../utils/getElementById.jsx";
 import { getTeacherEmail, processTeachers } from "../../utils/ClaseUtils.js";
+
+// Helper personalizado para renderizar dropdowns en modo edición manteniendo el label genérico y seleccionando el valor actual
+function StaticDropdownListWithSelected(data, label, id, className, selectedValue, disabled) {
+    const optionsHtml = Array.isArray(data) ? data.map(element => {
+        const isSelected = String(element) === String(selectedValue);
+        return `<option value="${element}" ${isSelected ? "selected" : ""}>${String(element)}</option>`;
+    }).join("") : "";
+
+    return `
+        <div class="mb-3 text-left">
+            <label for="${id}" class="block text-sm font-medium text-gray-700 mb-1">${label}</label>
+            <select id="${id}" class="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-white ${className || ''}" ${disabled ? "disabled" : ""}>
+                <option value="" disabled ${!selectedValue ? "selected" : ""}>${label}</option>
+                ${optionsHtml}
+            </select>
+        </div>
+    `;
+}
 
 async function editClaseInfo(clase, profesores, vehiculos, alumnos) {
     const isPractica = (clase.tipo || "").toLowerCase().includes("práct") || (clase.tipo || "").toLowerCase().includes("pract");
@@ -19,9 +36,10 @@ async function editClaseInfo(clase, profesores, vehiculos, alumnos) {
     if (isPractica) {
         // Dropdown para 1 solo alumno
         const alumnoObj = clase.alumnos && clase.alumnos[0];
-        const alumnoSelected = alumnoObj ? `${alumnoObj.nombre} (${alumnoObj.email})` : "";
+        const studentName = alumnoObj ? alumnoObj.email.split("@")[0] : "";
+        const alumnoSelected = alumnoObj ? `${studentName} (${alumnoObj.email})` : "";
         const alumnosListMapped = Array.isArray(alumnos) ? alumnos.map(a => `${a.nombre} (${a.email})`) : [];
-        alumnosHtml = StaticDropdownList(alumnosListMapped, alumnoSelected || "Alumno (1 cupo)", "swal2-input10", "m-1", false);
+        alumnosHtml = StaticDropdownListWithSelected(alumnosListMapped, "Alumno (1 cupo)", "swal2-input10", "m-1", alumnoSelected, false);
     } else {
         // Multiselect para alumnos teóricos
         const selectedIds = Array.isArray(clase.alumnos) ? clase.alumnos.map(a => Number(a.id)) : [];
@@ -47,7 +65,7 @@ async function editClaseInfo(clase, profesores, vehiculos, alumnos) {
         const activeVehicles = Array.isArray(vehiculos)
             ? vehiculos.filter(v => (v.estado || "").toLowerCase() === "activo" || (v.estado || "").toLowerCase() === "disponible" || v.patente === clase.vehiculoId).map(v => v.patente)
             : [];
-        vehiculoHtml = StaticDropdownList(activeVehicles, clase.vehiculoId || "Vehículo (patente)", "swal2-input9", "m-1", false);
+        vehiculoHtml = StaticDropdownListWithSelected(activeVehicles, "Vehículo (patente)", "swal2-input9", "m-1", clase.vehiculoId, false);
     }
 
     const { value: formValues } = await Swal.fire({
@@ -57,8 +75,8 @@ async function editClaseInfo(clase, profesores, vehiculos, alumnos) {
             ${createSwalDateField(3, "fecha", clase.fecha_clase)} 
             ${createSwalField(4, "Hora de Inicio", clase.hora_inicio)}
             ${createSwalField(5, "Hora de Término", clase.hora_fin)}
-            ${StaticDropdownList(ESTADO_CLASE, clase.estado_clase || "Estado", "swal2-input7", "m-1", false)}
-            ${StaticDropdownList(profesores, profesorSelected || "Profesor", "swal2-input8", "m-1", false)}
+            ${StaticDropdownListWithSelected(ESTADO_CLASE, "Estado", "swal2-input7", "m-1", clase.estado_clase, false)}
+            ${StaticDropdownListWithSelected(profesores, "Profesor", "swal2-input8", "m-1", profesorSelected, false)}
             ${vehiculoHtml}
             ${alumnosHtml}
         `,
