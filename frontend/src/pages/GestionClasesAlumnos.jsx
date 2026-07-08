@@ -29,8 +29,8 @@ const GestionClasesAlumnos = () => {
     const [Clases, fetchClase] = useGetClase(claseData, setClaseData);
 
     // Funcionalidad de crear clase conectada al botón "+ Agendar Clase"
-    const { handleCreateClase } = useCreateClase(setClaseData, profesores, vehiculoList, alumnoList);
-    const { handleEditClase } = editClase(fetchClase);
+    const { handleCreateClase } = useCreateClase(fetchClase, profesores, vehiculoList, alumnoList);
+    const { handleEditClase } = editClase(fetchClase, profesores, vehiculoList, alumnoList);
 
     const [buscar, setBuscar] = useState("");
     const [filtroTipo, setFiltroTipo] = useState("Todos los tipos");
@@ -157,7 +157,7 @@ const GestionClasesAlumnos = () => {
                                     <th className="px-6 py-4 font-semibold">Tipo</th>
                                     <th className="px-6 py-4 font-semibold">Vehículo</th>
                                     <th className="px-6 py-4 font-semibold">Estado Actual</th>
-                                    <th className="px-6 py-4 font-semibold">Acción</th>
+                                    {canCrudClases && <th className="px-6 py-4 font-semibold">Acción</th>}
                                 </tr>
                             </thead>
                             <tbody>
@@ -201,20 +201,19 @@ const GestionClasesAlumnos = () => {
                                                         {estado}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex flex-col gap-2 w-36">
-                                                        <select 
-                                                            className="bg-gray-900 text-white text-xs px-3 py-2 rounded shadow-sm outline-none cursor-pointer"
-                                                            value={estado}
-                                                            onChange={(e) => handleEstadoChange(item.id, e.target.value)}
-                                                            disabled={!canCrudClases}
-                                                        >
-                                                            <option value="Pendiente">Pendiente</option>
-                                                            <option value="Activa">Activa</option>
-                                                            <option value="Completada">Completada</option>
-                                                            <option value="Cancelada">Cancelada</option>
-                                                        </select>
-                                                        {canCrudClases && (
+                                                {canCrudClases && (
+                                                    <td className="px-6 py-4">
+                                                        <div className="flex flex-col gap-2 w-36">
+                                                            <select 
+                                                                className="bg-gray-900 text-white text-xs px-3 py-2 rounded shadow-sm outline-none cursor-pointer"
+                                                                value={estado}
+                                                                onChange={(e) => handleEstadoChange(item.id, e.target.value)}
+                                                            >
+                                                                <option value="Pendiente">Pendiente</option>
+                                                                <option value="Activa">Activa</option>
+                                                                <option value="Completada">Completada</option>
+                                                                <option value="Cancelada">Cancelada</option>
+                                                            </select>
                                                             <div className="flex gap-2">
                                                                 <button 
                                                                     className="flex-1 border border-blue-400 text-blue-500 hover:bg-blue-50 text-xs px-2 py-1 rounded transition-colors"
@@ -239,9 +238,9 @@ const GestionClasesAlumnos = () => {
                                                                     Eliminar
                                                                 </button>
                                                             </div>
-                                                        )}
-                                                    </div>
-                                                </td>
+                                                        </div>
+                                                    </td>
+                                                )}
                                             </tr>
                                         )
                                     })

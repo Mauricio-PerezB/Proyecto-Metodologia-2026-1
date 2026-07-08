@@ -18,7 +18,7 @@ router.get("/frontend/getTeacherList", async (req, res) => {
     // Format to match what frontend expects: [{ id, nombre, email }]
     const formattedTeachers = teachers.map(t => ({
       id: t.id,
-      nombre: t.email.split("@")[0], // User entity has no nombre, extract from email
+      nombre: t.email.split("@")[0],
       email: t.email
     }));
 
@@ -31,10 +31,9 @@ router.get("/frontend/getTeacherList", async (req, res) => {
 // RF1/RF2: Obtener lista de alumnos activos para asignación a clases
 router.get("/frontend/getStudentList", async (req, res) => {
   try {
+    // 1. Alumnos de la tabla Alumno (pre-registros, estado Activo)
     const alumnoRepository = AppDataSource.getRepository(Alumno);
     const alumnos = await alumnoRepository.find();
-
-    // Filtrar solo los alumnos con estado "Activo" (RF1: validar estado activo)
     const alumnosActivos = alumnos
       .filter(a => (a.estado || "").toLowerCase() === "activo")
       .map(a => ({
@@ -44,7 +43,23 @@ router.get("/frontend/getStudentList", async (req, res) => {
         estado: a.estado,
       }));
 
-    handleSuccess(res, 200, "Lista de alumnos activos obtenida", alumnosActivos);
+    // 2. Usuarios con role "estudiante" de la tabla User
+    const allUsers = await findUsers();
+    const estudiantesUser = allUsers
+      .filter(u => (u.role || "").toLowerCase() === "estudiante")
+      .map(u => ({
+        id: u.id,
+        nombre: u.email.split("@")[0],
+        email: u.email,
+        estado: "Activo",
+      }));
+
+    // 3. Combinar, priorizando Alumno y eliminando duplicados por email
+    const emailsAlumnos = new Set(alumnosActivos.map(a => a.email));
+    const estudiantesUnicos = estudiantesUser.filter(u => !emailsAlumnos.has(u.email));
+    const listaFinal = [...alumnosActivos, ...estudiantesUnicos];
+
+    handleSuccess(res, 200, "Lista de alumnos activos obtenida", listaFinal);
   } catch (error) {
     handleErrorServer(res, 500, "Error al obtener lista de alumnos", error.message);
   }

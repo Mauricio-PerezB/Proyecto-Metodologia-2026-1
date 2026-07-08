@@ -12,14 +12,11 @@ import Evaluacion from '@pages/Evaluacion';
 import MisClases from '@pages/MisClases';
 import CalificacionesAlumnos from '@pages/CalificacionesAlumnos';
 import '@styles/styles.css';
-
 import HistorialClasesAlumno from '@pages/HistorialClasesAlumno';
 import GestionVehiculosSecretaria from '@pages/GestionVehiculosSecretaria';
-import GenerarQRProfesor from '@pages/GenerarQRProfesor';
-import EscanearQRAlumno from '@pages/EscanearQRAlumno';
-import VerAsistenciaProfesor from '@pages/VerAsistenciaProfesor';
 import GestionClasesAlumnos from '@pages/GestionClasesAlumnos';
 import ExamenPractico from '@pages/ExamenPractico';
+import MisClasesFuturas from '@pages/MisClasesFuturas';
 
 const router = createBrowserRouter([
   {
@@ -67,17 +64,10 @@ const router = createBrowserRouter([
         path: '/gestion-vehiculos',
         element: <GestionVehiculosSecretaria />
       },
+
       {
-        path: '/generar-qr-clase',
-        element: <GenerarQRProfesor />
-      },
-      {
-        path: '/escanear-asistencia',
-        element: <EscanearQRAlumno />
-      },
-      {
-        path: '/ver-asistencia',
-        element: <VerAsistenciaProfesor />
+        path: '/mis-clases-futuras',
+        element: <MisClasesFuturas />
       },
       {
         path: '/examenes-practicos',

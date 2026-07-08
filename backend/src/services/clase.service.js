@@ -22,6 +22,14 @@ export async function crearClase(data) {
 
   if (!finalDocenteId) throw new Error("El docente es obligatorio.");
 
+  let finalAlumnoIds = alumnoIds || data.ids_alumnos;
+  if ((!finalAlumnoIds || finalAlumnoIds.length === 0) && data.email_alumno) {
+    const alumnoUser = await userRepo.findOne({ where: { email: data.email_alumno } });
+    if (alumnoUser) {
+      finalAlumnoIds = [alumnoUser.id];
+    }
+  }
+
   let startStr = fechaHoraInicio;
   let endStr = fechaHoraFin;
   if (!startStr && data.fecha_clase && data.hora_inicio) {
@@ -47,7 +55,7 @@ export async function crearClase(data) {
     throw new Error(`El docente con ID ${finalDocenteId} no está registrado en el sistema.`);
   }
 
-  const alumnosIdsNumeros = (alumnoIds && Array.isArray(alumnoIds)) ? alumnoIds.map(id => parseInt(id)) : [];
+  const alumnosIdsNumeros = (finalAlumnoIds && Array.isArray(finalAlumnoIds)) ? finalAlumnoIds.map(id => parseInt(id)) : [];
   let alumnos = [];
   if (alumnosIdsNumeros.length > 0) {
     alumnos = await userRepo.find({
@@ -63,14 +71,15 @@ export async function crearClase(data) {
 
   const tipoClaseNormalizado = tipo.toLowerCase().trim();
   let finalVehiculoId = null;
+  const finalVehiculoIdIn = vehiculoId || data.patente_auto;
 
   if (tipoClaseNormalizado === "práctica" || tipoClaseNormalizado === "practica") {
-    if (!vehiculoId || vehiculoId.trim() === "") {
+    if (!finalVehiculoIdIn || finalVehiculoIdIn.trim() === "") {
       throw new Error("Para clases de carácter práctico es obligatorio registrar el identificador del vehículo asignado.");
     }
-    finalVehiculoId = vehiculoId.trim();
+    finalVehiculoId = finalVehiculoIdIn.trim();
   } else if (tipoClaseNormalizado === "teórica" || tipoClaseNormalizado === "teorica") {
-    finalVehiculoId = vehiculoId ? vehiculoId.trim() : null;
+    finalVehiculoId = finalVehiculoIdIn ? finalVehiculoIdIn.trim() : null;
   } else {
     throw new Error(`El tipo de clase "${tipo}" no es válido. Debe ser "Práctica" o "Teórica".`);
   }
@@ -113,7 +122,11 @@ export async function obtenerClases() {
 
 export async function updateClase(id, data) {
   const claseRepo = AppDataSource.getRepository(Clase);
-  const clase = await claseRepo.findOne({ where: { id: parseInt(id) } });
+  const userRepo = AppDataSource.getRepository(User);
+  const clase = await claseRepo.findOne({ 
+    where: { id: parseInt(id) },
+    relations: ["docente", "alumnos"]
+  });
   
   if (!clase) {
     throw new Error(`La clase con ID ${id} no existe.`);
@@ -123,7 +136,53 @@ export async function updateClase(id, data) {
   if (data.descripcion) clase.descripcion = data.descripcion;
   if (data.tipo) clase.tipo = data.tipo;
   if (data.estado_clase) clase.estado_clase = data.estado_clase;
-  if (data.vehiculoId !== undefined) clase.vehiculoId = data.vehiculoId;
+
+  // Vehículo
+  const finalVehiculoIdIn = data.vehiculoId !== undefined ? data.vehiculoId : data.patente_auto;
+  if (finalVehiculoIdIn !== undefined) {
+    clase.vehiculoId = finalVehiculoIdIn ? finalVehiculoIdIn.trim() : null;
+  }
+
+  // Docente / Profesor
+  let finalDocenteId = data.docenteId;
+  if (!finalDocenteId && data.email_profesor) {
+    const docenteUser = await userRepo.findOne({ where: { email: data.email_profesor } });
+    if (docenteUser) {
+      finalDocenteId = docenteUser.id;
+    }
+  }
+  if (finalDocenteId) {
+    const docente = await userRepo.findOne({ where: { id: parseInt(finalDocenteId) } });
+    if (!docente) {
+      throw new Error(`El docente con ID ${finalDocenteId} no está registrado en el sistema.`);
+    }
+    clase.docente = docente;
+  }
+
+  // Alumnos
+  let finalAlumnoIds = data.alumnoIds || data.ids_alumnos;
+  if ((!finalAlumnoIds || finalAlumnoIds.length === 0) && data.email_alumno) {
+    const alumnoUser = await userRepo.findOne({ where: { email: data.email_alumno } });
+    if (alumnoUser) {
+      finalAlumnoIds = [alumnoUser.id];
+    }
+  }
+  if (finalAlumnoIds && Array.isArray(finalAlumnoIds)) {
+    const alumnosIdsNumeros = finalAlumnoIds.map(id => parseInt(id));
+    if (alumnosIdsNumeros.length > 0) {
+      const alumnos = await userRepo.find({
+        where: { id: In(alumnosIdsNumeros) }
+      });
+      if (alumnos.length !== alumnosIdsNumeros.length) {
+        const encontradosIds = alumnos.map(a => a.id);
+        const faltantes = alumnosIdsNumeros.filter(id => !encontradosIds.includes(id));
+        throw new Error(`Los siguientes alumnos no están registrados en el sistema: ${faltantes.join(", ")}`);
+      }
+      clase.alumnos = alumnos;
+    } else {
+      clase.alumnos = [];
+    }
+  }
 
   // Si se envían fechas por separado en data.fecha_clase, hora_inicio, hora_fin
   if (data.fecha_clase && data.hora_inicio && data.hora_fin) {

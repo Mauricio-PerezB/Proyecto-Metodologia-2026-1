@@ -1,4 +1,5 @@
 import { SidebarItem } from "./SidebarItem.jsx";
+<<<<<<< HEAD
 import {
     MdHouse,
     MdSchool,
@@ -7,6 +8,17 @@ import {
     MdAdminPanelSettings,
     MdDirectionsCar,
     MdLogout
+=======
+import { 
+  MdHouse, 
+  MdSchool, 
+  MdAttachMoney, 
+  MdShoppingCart, 
+  MdAdminPanelSettings,
+  MdDirectionsCar,
+  MdLogout,
+  MdCalendarMonth
+>>>>>>> bastian
 } from "react-icons/md";
 
 import { useAuth } from '@context/AuthContext';
@@ -47,21 +59,21 @@ export const SidebarBase = ({ pageContent }) => {
             {/* Sidebar content here */}
             <ul className="menu w-full grow">
                 <SidebarItem label="Inicio" destination="/home" icon={MdHouse} />            
-                <SidebarItem label="Gestión de Clases" destination="/gestion-clases-alumnos" icon={MdSchool} />
+                {user?.rol === 'secretario' && (
+    <SidebarItem label="Gestión de Clases" destination="/gestion-clases-alumnos" icon={MdSchool} />
+)}
                 {user?.rol === 'profesor' && (
                     <>
                         <SidebarItem label="Mis Clases" destination="/mis-clases" icon={MdSchool} />
                         <SidebarItem label="Evaluaciones Internas" destination="/evaluaciones-internas" icon={MdSchool} />
                         <SidebarItem label="Exámenes Prácticos" destination="/examenes-practicos" icon={MdDirectionsCar} />
-                        <SidebarItem label="Generar QR Asistencia" destination="/generar-qr-clase" icon={MdSchool} />
-                        <SidebarItem label="Ver Asistencias" destination="/ver-asistencia" icon={MdSchool} />
                     </>
                 )}
                 {user?.rol === 'estudiante' && (
                     <>
                         <SidebarItem label="Mi Historial de Clases" destination="/historial-clases" icon={MdSchool} />
                         <SidebarItem label="Mi Historial Exámenes" destination="/examenes-practicos" icon={MdDirectionsCar} />
-                        <SidebarItem label="Registrar Asistencia (QR)" destination="/escanear-asistencia" icon={MdSchool} />
+                        <SidebarItem label="Mis Clases Futuras" destination="/mis-clases-futuras" icon={MdCalendarMonth} />
                     </>
                 )}
                 {user?.rol === 'secretario' && (

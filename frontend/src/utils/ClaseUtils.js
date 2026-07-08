@@ -6,7 +6,6 @@ export const getTeacherEmail = (teacher) => {
     try {
         const splitTeacher = teacher.split("(")[1];
         const trimmedTeacher = splitTeacher.substring(0, splitTeacher.length - 1);
-        console.log("TRIMMED TEACHER: ", trimmedTeacher);
         return trimmedTeacher;
     } catch (error) {
         console.error(error);
@@ -23,7 +22,6 @@ export const getTeacherNombre = (teacher) => {
         const splitTeacher = teacher.split("(")[0];
         const nameTeacher = splitTeacher.substring(0, splitTeacher.length - 1);
         const nameTeacherWithoutId = nameTeacher.split(". ")[1];
-        console.log("TRIMMED TEACHER: ", nameTeacherWithoutId);
         return nameTeacherWithoutId;
     } catch (error) {
         console.error(error);
@@ -47,26 +45,24 @@ export const getTeacherEmailFromTeacherList = (teacher) => {
 }
 
 export const processTeachers = (teachers) => {
-    console.log("LOS PROFES: ", JSON.stringify(teachers));
-
-    const DEFAULT_TEACHER = "Juanito Perez (juanitoperez@gmail.com)";
-
     if (!Array.isArray(teachers)) {
         return [];
     }
 
-    const newTeachers = teachers.map((teacher) => {
+    return teachers.map((teacher) => {
         try {
-            if (typeof(teacher) !== "string") {
-                console.error("El profesor debe ser un string: ", teacher);
-                return DEFAULT_TEACHER;
+            // Formato objeto {id, nombre, email} devuelto por el API
+            if (typeof teacher === 'object' && teacher !== null) {
+                return `${teacher.nombre} (${teacher.email})`;
             }
-
-            return teacher.split(". ")[1] || DEFAULT_TEACHER;
+            // Formato string legado: "N. nombre (email)"
+            if (typeof teacher === 'string') {
+                return teacher.split(". ")[1] || teacher;
+            }
+            return null;
         } catch (error) {
             console.error(error);
-            return DEFAULT_TEACHER;
+            return null;
         }
-    });
-    return newTeachers;
-}
+    }).filter(Boolean);
+}
