@@ -5,6 +5,12 @@ import { User } from "../entities/user.entity.js";
 import { Clase } from "../entities/clase.entity.js";
 import { PreRegistro } from "../entities/preregistro.entity.js";
 import { Vehiculo } from "../entities/vehiculo.entity.js";
+import { Alumno } from "../entities/alumno.entity.js";
+import { ExamenPractico } from "../entities/examen.entity.js";
+import { ExamenPsicotecnico } from "../entities/examenPsicotecnico.entity.js";
+import { TestTeorico } from "../entities/testTeorico.entity.js";
+import { Plan } from "../entities/plan.entity.js";
+import { HistorialMantenimiento } from "../entities/historialMantenimiento.entity.js";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -13,7 +19,18 @@ export const AppDataSource = new DataSource({
   username: `${DB_USERNAME}`,
   password: `${PASSWORD}`,
   database: `${DATABASE}`,
-  entities: ["src/entities/**/*.js"],
+  entities: [
+    User,
+    Clase,
+    Vehiculo,
+    Alumno,
+    ExamenPractico,
+    ExamenPsicotecnico,
+    PreRegistro,
+    TestTeorico,
+    Plan,
+    HistorialMantenimiento,
+  ],
   synchronize: true,
   logging: false,
 });
@@ -27,3 +44,4 @@ export async function connectDB() {
     process.exit(1);
   }
 }
+

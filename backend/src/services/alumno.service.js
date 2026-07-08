@@ -37,7 +37,7 @@ export async function getAllAlumnos() {
     const totalTests = alumno.tests.reduce((sum, t) => sum + t.nota, 0);
     const promedioTests = alumno.tests.length > 0 ? totalTests / alumno.tests.length : 0;
 
-    // Obtener el último examen psicotécnico registrado 
+    // Obtener el último examen psicotécnico registrado (por ID más alto)
     const examenesOrdenados = [...alumno.examenes].sort((a, b) => b.id - a.id);
     const ultimoExamen = examenesOrdenados[0] || null;
 
@@ -96,7 +96,7 @@ export async function addTestTeorico(alumnoId, nota) {
   });
 
   const testGuardado = await testRepository.save(nuevoTest);
-  delete testGuardado.alumno; 
+  delete testGuardado.alumno; // Quitar relación circular para la respuesta
   return testGuardado;
 }
 
@@ -123,7 +123,7 @@ export async function addExamenPsicotecnico(alumnoId, nota, estado) {
   });
 
   const examenGuardado = await examenRepository.save(nuevoExamen);
-  delete examenGuardado.alumno; 
+  delete examenGuardado.alumno; // Quitar relación circular para la respuesta
   return examenGuardado;
 }
 
@@ -141,7 +141,7 @@ export async function egresarAlumno(alumnoId) {
     throw new Error("El alumno ya se encuentra Egresado");
   }
 
-  // Validar promedio de tests teóricos >= 80%
+  // 1. Validar promedio de tests teóricos >= 80%
   const totalTests = alumno.tests.reduce((sum, t) => sum + t.nota, 0);
   const promedioTests = alumno.tests.length > 0 ? totalTests / alumno.tests.length : 0;
 
@@ -151,7 +151,7 @@ export async function egresarAlumno(alumnoId) {
     );
   }
 
-  // Validar que el último examen psicotécnico sea "Aprobado"
+  // 2. Validar que el último examen psicotécnico sea "Aprobado"
   const examenesOrdenados = [...alumno.examenes].sort((a, b) => b.id - a.id);
   const ultimoExamen = examenesOrdenados[0] || null;
 
@@ -162,7 +162,7 @@ export async function egresarAlumno(alumnoId) {
     );
   }
 
-  // Egresar alumno y habilitar descarga del certificado
+  // 3. Egresar alumno y habilitar descarga del certificado
   alumno.estado = "Egresado";
   alumno.certificadoHabilitado = true;
 
@@ -189,6 +189,7 @@ export async function generarCertificado(alumnoId) {
   const totalTests = alumno.tests.reduce((sum, t) => sum + t.nota, 0);
   const promedioTests = alumno.tests.length > 0 ? totalTests / alumno.tests.length : 0;
 
+  // Diseño del certificado en formato texto profesional (ASCII art y espaciado de honor)
   const fechaEmision = new Date().toLocaleDateString("es-CL", {
     year: "numeric",
     month: "long",
@@ -197,16 +198,41 @@ export async function generarCertificado(alumnoId) {
   
   const certId = `METO-CERT-${alumno.id}-${Date.now().toString(36).toUpperCase()}`;
 
-  const certText = `CERTIFICADO DE EGRESADO
+  const certText = `
+================================================================================
+                      ACADEMIA DE FORMACIÓN Y SIMULACIÓN
+================================================================================
+                                
+                    CERTIFICADO DE FINALIZACIÓN DE CURSO
+                                
+================================================================================
 
-Alumno: ${alumno.nombre}
-Email: ${alumno.email}
+Por medio del presente documento oficial, se confiere la distinción de:
 
-Promedio test teórico: ${promedioTests.toFixed(2)}%
-Examen psicotécnico: APROBADO
+                                  EGRESADO
+A:
 
-Fecha de emisión: ${fechaEmision}
-Código de certificado: ${certId}
+                      ${alumno.nombre.toUpperCase()}
+                      Correo Electrónico: ${alumno.email}
+
+Por haber cumplido con distinción y de manera satisfactoria con todas las
+evaluaciones teóricas de simulación y evaluaciones psicotécnicas prácticas,
+acreditando el siguiente rendimiento académico de excelencia:
+
+  > PROMEDIO EVALUACIONES SIMULACIÓN TEÓRICAS:  ${promedioTests.toFixed(2)}%
+  > EVALUACIÓN EXAMEN PSICOTÉCNICO:             APROBADO
+
+Cumpliendo con los estándares de aprobación establecidos de un promedio igual
+o superior al 80% y examen psicotécnico apto.
+
+En fe de lo cual, se firma y expide el presente documento en Concepción.
+
+                     Fecha de Emisión: ${fechaEmision}
+                     Código de Verificación: ${certId}
+
+================================================================================
+         Documento emitido electrónicamente con validez curricular.
+================================================================================
 `;
 
   return {

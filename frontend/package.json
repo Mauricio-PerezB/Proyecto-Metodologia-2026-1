@@ -19,6 +19,7 @@
     "daisyui": "^5.5.20",
     "html5-qrcode": "^2.3.8",
     "js-cookie": "^3.0.5",
+    "jspdf": "^4.2.1",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^1.16.0",
     "qrcode": "^1.5.4",

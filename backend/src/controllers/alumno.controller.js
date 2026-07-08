@@ -118,7 +118,12 @@ export async function downloadCertificate(req, res) {
 
     const cert = await generarCertificado(id);
 
-    // Configurar cabeceras de respuesta para forzar descarga del archivo de texto
+    // Si el cliente prefiere JSON, enviamos todo el objeto (incluyendo metadatos)
+    if (req.headers.accept && req.headers.accept.includes("application/json")) {
+      return res.status(200).json(cert);
+    }
+
+    // Configurar cabeceras de respuesta para descargar archivo de texto (fallback)
     res.setHeader("Content-Type", "text/plain; charset=utf-8");
     res.setHeader("Content-Disposition", `attachment; filename="${cert.filename}"`);
     res.status(200).send(cert.content);

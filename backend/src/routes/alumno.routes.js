@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authMiddleware } from "../middleware/auth.middleware.js";
 import {
   registerAlumno,
   listAlumnos,
@@ -11,13 +12,15 @@ import {
 
 const router = Router();
 
-router.post("/", registerAlumno);
-router.get("/", listAlumnos);
-router.get("/:id", findAlumno);
-router.post("/:id/tests", registerTest);
-router.post("/:id/examenes", registerExamen);
-router.post("/:id/egresar", promoteToEgresado);
+// Rutas Administrativas (Protegidas por JWT)
+router.post("/", authMiddleware, registerAlumno);
+router.get("/", authMiddleware, listAlumnos);
+router.get("/:id", authMiddleware, findAlumno);
+router.post("/:id/tests", authMiddleware, registerTest);
+router.post("/:id/examenes", authMiddleware, registerExamen);
+router.put("/:id/egresar", authMiddleware, promoteToEgresado);
 
+// Ruta Pública para descargar el certificado (Una vez el alumno haya egresado con éxito)
 router.get("/:id/certificado/descargar", downloadCertificate);
 
 export default router;
