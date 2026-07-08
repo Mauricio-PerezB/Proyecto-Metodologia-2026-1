@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@context/AuthContext';
 import escuelaConductoresImg from '@assets/Escuela-de-Conductores-Conduce.jpg';
 
 export default function Home() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -133,7 +135,14 @@ export default function Home() {
               </p>
             </div>
             <div className="mt-6 flex justify-end">
-              <button className="px-5 py-2.5 bg-white text-blue-700 font-bold rounded-xl text-sm hover:bg-blue-50 transition-colors shadow-sm">
+              <button 
+                onClick={() => {
+                  if (user?.rol === 'secretario') navigate('/gestionar-ventas');
+                  else if (user?.rol === 'profesor') navigate('/mis-clases');
+                  else if (user?.rol === 'estudiante') navigate('/mis-clases-futuras');
+                }}
+                className="px-5 py-2.5 bg-white text-blue-700 font-bold rounded-xl text-sm hover:bg-blue-50 transition-colors shadow-sm"
+              >
                 {user?.rol === 'secretario' ? 'Ver Preinscripciones' : 'Ver Clases'}
               </button>
             </div>

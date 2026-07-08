@@ -201,7 +201,7 @@ export default function GestionarVentas() {
                       <td className="px-6 py-4 text-center">
                         {sol.comprobantePagoUrl && sol.comprobantePagoUrl !== 'archivo-adjunto' ? (
                           <a 
-                            href={sol.comprobantePagoUrl.startsWith('http') ? sol.comprobantePagoUrl : `http://localhost:5000/uploads/comprobantes/${sol.comprobantePagoUrl}`} 
+                            href={sol.comprobantePagoUrl.startsWith('http') ? sol.comprobantePagoUrl : `http://localhost:3000/uploads/comprobantes/${sol.comprobantePagoUrl}`} 
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="inline-flex items-center px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-colors"
