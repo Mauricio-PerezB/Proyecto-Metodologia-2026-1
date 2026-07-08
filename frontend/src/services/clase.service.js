@@ -26,7 +26,7 @@ export async function createClaseService(claseData) {
 
 export async function patchClaseService(id_clase, claseData) {
     try {
-        const response = await axios.patch(`/clases/editar/${id_clase}`,claseData);
+        const response = await axios.patch(`/clases/${id_clase}`,claseData);
         return Object.assign(response.data, {status: response.status});
     } catch (error) {
         throw error.response || error;
