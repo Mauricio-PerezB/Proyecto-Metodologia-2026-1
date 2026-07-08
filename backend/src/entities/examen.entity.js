@@ -9,10 +9,26 @@ export const ExamenPractico = new EntitySchema({
       type: "int",
       generated: "increment",
     },
+
+    // Datos del vehículo
     vehiculoId: {
       type: "varchar",
       length: 100,
       nullable: false,
+    },
+    tipoVehiculo: {
+      type: "varchar",
+      length: 20,
+      nullable: true,
+    },
+    marcaModelo: {
+      type: "varchar",
+      length: 150,
+      nullable: true,
+    },
+    kilometrajeInicial: {
+      type: "int",
+      nullable: true,
     },
     fechaHoraInicio: {
       type: "timestamp",
@@ -22,12 +38,37 @@ export const ExamenPractico = new EntitySchema({
       type: "timestamp",
       nullable: false,
     },
-    // Valores posibles son pendiente, aprobado, reprobado
     estado: {
       type: "varchar",
       length: 20,
       default: "pendiente",
+      nullable: false,
     },
+    kilometrajeFinal: {
+      type: "int",
+      nullable: true,
+    },
+    // conteo de faltas
+    faltasLeves: {
+      type: "int",
+      default: 0,
+      nullable: false,
+    },
+    faltasGraves: {
+      type: "int",
+      default: 0,
+      nullable: false,
+    },
+    faltasReprobatorias: {
+      type: "int",
+      default: 0,
+      nullable: false,
+    },
+    codigosFaltas: {
+      type: "simple-json",
+      nullable: true,
+    },
+    // observaciones del instructor
     observaciones: {
       type: "text",
       nullable: true,
