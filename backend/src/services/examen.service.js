@@ -48,7 +48,7 @@ async function verificarDisponibilidadVehiculo(vehiculoId, inicio, fin, examenRe
     throw new Error(`El vehículo "${vehiculoId}" no está disponible (estado: ${vehiculo.estado}).`);
   }
 
-  // Traslape con clases prácticas de Ángel
+  // choque con clases prácticas
   const traslapeClase = await claseRepo
     .createQueryBuilder("clase")
     .where("clase.vehiculoId = :vehiculoId", { vehiculoId })
@@ -64,7 +64,7 @@ async function verificarDisponibilidadVehiculo(vehiculoId, inicio, fin, examenRe
     );
   }
 
-  // Traslape con otros exámenes prácticos ya registrados
+  // Choque con otro examen práctico
   const traslapeExamen = await examenRepo
     .createQueryBuilder("examen")
     .where("examen.vehiculoId = :vehiculoId", { vehiculoId })
@@ -112,7 +112,6 @@ function procesarCodigosFaltas(codigos) {
   return { leves, graves, reprobatorias, codigosValidos };
 }
 
-// Programar examen practico
 export async function programarExamenService(data) {
   const {
     alumnoId, instructorId, vehiculoId,
@@ -120,7 +119,7 @@ export async function programarExamenService(data) {
     tipoVehiculo, marcaModelo, kilometrajeInicial,
   } = data;
 
-  // Validación de campos obligatorios
+  // Validación
   if (!alumnoId) throw new Error("El ID del alumno es obligatorio.");
   if (!instructorId) throw new Error("El ID del instructor evaluador es obligatorio.");
   if (!vehiculoId) throw new Error("El identificador del vehículo (patente) es obligatorio.");

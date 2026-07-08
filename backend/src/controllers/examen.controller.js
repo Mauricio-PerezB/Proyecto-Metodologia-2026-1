@@ -37,7 +37,6 @@ function isClientError(message) {
   return CLIENT_ERROR_KEYWORDS.some((kw) => lowerMsg.includes(kw.toLowerCase()));
 }
 
-// Programar examen práctico
 export async function programarExamenController(req, res) {
   try {
     const examen = await programarExamenService(req.body);
@@ -51,7 +50,6 @@ export async function programarExamenController(req, res) {
   }
 }
 
-// Registrar resultado del examen
 export async function registrarResultadoController(req, res) {
   try {
     const { id } = req.params;
@@ -66,7 +64,6 @@ export async function registrarResultadoController(req, res) {
   }
 }
 
-// Lista todos los exámenes del sistema
 export async function obtenerExamenesController(req, res) {
   try {
     const examenes = await obtenerExamenesService();
@@ -76,7 +73,6 @@ export async function obtenerExamenesController(req, res) {
   }
 }
 
-// Obtiene un examen específico por ID
 export async function obtenerExamenPorIdController(req, res) {
   try {
     const { id } = req.params;
@@ -91,7 +87,6 @@ export async function obtenerExamenPorIdController(req, res) {
   }
 }
 
-// Historial académico de un alumno
 export async function obtenerHistorialAlumnoController(req, res) {
   try {
     const { alumnoId } = req.params;

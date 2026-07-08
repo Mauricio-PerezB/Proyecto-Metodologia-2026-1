@@ -38,8 +38,6 @@ export const RegistrarResultadoForm = ({ examen, isOpen, onClose, onSuccess }) =
     return (
         <div className="modal modal-open">
             <div className="modal-box w-11/12 max-w-4xl max-h-[90vh] overflow-y-auto">
-
-                {/* Encabezado */}
                 <h3 className="font-bold text-lg">Registrar Resultado — Examen #{examen.id}</h3>
                 <p className="text-sm text-base-content/60 mb-4">
                     Alumno: <strong>{examen.alumno?.nombre || examen.alumno?.email || '—'}</strong>
@@ -72,7 +70,6 @@ export const RegistrarResultadoForm = ({ examen, isOpen, onClose, onSuccess }) =
                         )}
                     </div>
 
-                    {/* Contador de faltas */}
                     <div className="stats shadow w-full">
                         <div className="stat place-items-center">
                             <div className="stat-title">Faltas Leves (L)</div>
@@ -88,7 +85,6 @@ export const RegistrarResultadoForm = ({ examen, isOpen, onClose, onSuccess }) =
                         </div>
                     </div>
 
-                    {/* Ficha de faltas por categoría */}
                     <div className="space-y-3">
                         <h4 className="font-semibold text-sm uppercase tracking-wide text-base-content/70">
                             Ficha oficial — Faltas cometidas
@@ -123,7 +119,6 @@ export const RegistrarResultadoForm = ({ examen, isOpen, onClose, onSuccess }) =
                         ))}
                     </div>
 
-                    {/* Observaciones*/}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div className="form-control">
                             <label className="label"><span className="label-text">Observaciones</span></label>
@@ -149,7 +144,6 @@ export const RegistrarResultadoForm = ({ examen, isOpen, onClose, onSuccess }) =
                         </div>
                     </div>
 
-                    {/* Botones */}
                     <div className="modal-action">
                         <button
                             id="resultado-cancelar"

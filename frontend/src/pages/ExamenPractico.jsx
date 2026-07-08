@@ -52,7 +52,6 @@ const ExamenPractico = () => {
                     </p>
                 </div>
 
-                {/* Botón sólo para secretario */}
                 {rol === 'secretario' && (
                     <button
                         id="btn-programar-examen"
@@ -64,7 +63,6 @@ const ExamenPractico = () => {
                 )}
             </div>
 
-            {/* Tabla */}
             {rol === 'estudiante' ? (
                 loadingHistorial ? (
                     <div className="flex justify-center py-12">
