@@ -159,23 +159,15 @@ const CalificacionesAlumnos = () => {
   }
 
   return (
-    <div
-      className="min-h-screen bg-cover bg-center pt-20 pb-12 px-4 sm:px-6 lg:px-8 font-sans relative"
-      style={{
-        backgroundImage:
-          "url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070&auto=format&fit=crop')",
-      }}
-    >
-      <div className="absolute inset-0 bg-black/55 backdrop-blur-[2px]"></div>
-
-      <div className="max-w-7xl mx-auto relative z-10 space-y-6">
+    <div className="min-h-screen pt-12 pb-12 px-4 sm:px-6 lg:px-8 font-sans">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-4xl font-bold text-white tracking-wide shadow-black drop-shadow-md">
+            <h1 className="text-4xl font-bold text-gray-800 tracking-wide">
               Evaluaciones Internas
             </h1>
-            <p className="text-gray-300 text-sm mt-1">
+            <p className="text-gray-600 text-sm mt-1">
               Registro de calificaciones, promedio de simulaciones y certificación de egresados.
             </p>
           </div>
@@ -193,7 +185,7 @@ const CalificacionesAlumnos = () => {
           <input
             type="text"
             placeholder="Buscar alumno por nombre o correo electrónico..."
-            className="bg-gray-900/90 text-white placeholder-gray-400 border border-gray-700 px-4 py-3 rounded-lg w-full md:w-1/2 outline-none focus:border-indigo-500 transition-colors"
+            className="bg-white text-gray-800 placeholder-gray-400 border border-gray-300 px-4 py-3 rounded-lg shadow-sm w-full md:w-1/2 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
             value={buscar}
             onChange={(e) => setBuscar(e.target.value)}
           />
