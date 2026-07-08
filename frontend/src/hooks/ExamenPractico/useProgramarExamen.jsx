@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { getTeacherList } from '../../services/profile.service.js';
-import { getStudentList, programarExamen } from '../../services/examen.service.js';
+import { getTeacherList, getStudentList } from '../../services/profile.service.js';
+import { getVehiculoList } from '../../services/vehiculo.service.js';
+import { programarExamen } from '../../services/examen.service.js';
 import { fireDynamicSwal } from '../utils/dynamicSwal.jsx';
 
 export const useProgramarExamen = (onSuccess) => {
     const [alumnos, setAlumnos] = useState([]);
     const [profesores, setProfesores] = useState([]);
+    const [vehiculos, setVehiculos] = useState([]);
     const [loading, setLoading] = useState(false);
     const [loadingLists, setLoadingLists] = useState(true);
 
@@ -13,12 +15,14 @@ export const useProgramarExamen = (onSuccess) => {
         const cargarListas = async () => {
             setLoadingLists(true);
             try {
-                const [listaAlumnos, listaProfesores] = await Promise.all([
+                const [listaAlumnos, listaProfesores, listaVehiculos] = await Promise.all([
                     getStudentList(),
                     getTeacherList(),
+                    getVehiculoList(),
                 ]);
                 setAlumnos(listaAlumnos);
                 setProfesores(listaProfesores);
+                setVehiculos(listaVehiculos);
             } catch (err) {
                 console.error('Error al cargar listas de usuarios:', err);
             } finally {
@@ -43,5 +47,5 @@ export const useProgramarExamen = (onSuccess) => {
         }
     };
 
-    return { alumnos, profesores, loading, loadingLists, handleSubmit };
+    return { alumnos, profesores, vehiculos, loading, loadingLists, handleSubmit };
 };

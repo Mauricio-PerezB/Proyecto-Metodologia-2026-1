@@ -32,7 +32,7 @@ const FieldInput = ({ id, label, name, type = 'text', value, onChange, required,
 
 export const ProgramarExamenForm = ({ isOpen, onClose, onSuccess }) => {
     const [formData, setFormData] = useState(INITIAL_FORM);
-    const { alumnos, profesores, loading, loadingLists, handleSubmit } = useProgramarExamen(() => {
+    const { alumnos, profesores, vehiculos, loading, loadingLists, handleSubmit } = useProgramarExamen(() => {
         setFormData(INITIAL_FORM);
         if (onSuccess) onSuccess();
         if (onClose) onClose();
@@ -99,16 +99,27 @@ export const ProgramarExamenForm = ({ isOpen, onClose, onSuccess }) => {
                             </select>
                         </label>
 
-                        <FieldInput
-                            id="programar-vehiculoId"
-                            label="Patente del vehículo"
-                            name="vehiculoId"
-                            type="text"
-                            placeholder="Ej: BBBB11"
-                            value={formData.vehiculoId}
-                            onChange={handleChange}
-                            required
-                        />
+                        <label className="form-control w-full">
+                            <div className="label"><span className="label-text">Vehículo *</span></div>
+                            <select
+                                id="programar-vehiculoId"
+                                name="vehiculoId"
+                                className="select select-bordered w-full"
+                                value={formData.vehiculoId}
+                                onChange={handleChange}
+                                required
+                            >
+                                <option value="">— Seleccione un vehículo —</option>
+                                {vehiculos.map((v) => {
+                                    const isMaint = (v.estado || '').toLowerCase() === 'en mantenimiento' || (v.estado || '').toLowerCase() === 'inactivo';
+                                    return (
+                                        <option key={v.id} value={v.patente} disabled={isMaint}>
+                                            {v.modelo} - {v.patente} ({v.transmision}){isMaint ? ` [${v.estado}]` : ''}
+                                        </option>
+                                    );
+                                })}
+                            </select>
+                        </label>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <FieldInput
