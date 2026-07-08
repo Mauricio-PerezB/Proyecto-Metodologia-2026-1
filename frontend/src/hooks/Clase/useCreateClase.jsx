@@ -4,7 +4,7 @@ import { createSwalField, createSwalDateField } from "../utils/swalField.jsx";
 import { gebi } from "../utils/getElementById.jsx";
 import { fireDynamicSwal } from "../utils/dynamicSwal.jsx";
 import { StaticDropdownList } from "../utils/DropdownList.jsx";
-import { DIAS_SEMANA, TIPO_CLASE, ESTADO_CLASE, CLASE_TEORICA, CLASE_PRACTICA } from "../../constants/clase.constants.jsx";
+import { ESTADO_CLASE, CLASE_TEORICA, CLASE_PRACTICA } from "../../constants/clase.constants.jsx";
 import { getTeacherEmail, processTeachers } from "../../utils/ClaseUtils.js";
 
 const PRACTICA = 1;
@@ -62,7 +62,6 @@ async function CreateClaseTeorica(profesores, alumnos) {
             ${createSwalDateField(3, "fecha", "")} 
             ${createSwalField(4, "Hora de Inicio", "")}
             ${createSwalField(5, "Hora de Término", "")}
-            ${StaticDropdownList(DIAS_SEMANA, "Día", "swal2-input6", "m-1", true)}
             ${StaticDropdownList(ESTADO_CLASE, "Estado", "swal2-input7", "m-1", false)}
             ${StaticDropdownList(profesores, "Profesor", "swal2-input8", "m-1", false)}
             ${createMultipleStudentSelect(alumnos, alumnoSelectId)}
@@ -76,7 +75,6 @@ async function CreateClaseTeorica(profesores, alumnos) {
             const fecha_clase = gebi('swal2-input3')?.value;
             const hora_inicio = gebi('swal2-input4')?.value;
             const hora_fin = gebi('swal2-input5')?.value;
-            const dia = String(gebi('swal2-input6')?.value);
             const estado_clase = String(gebi('swal2-input7')?.value);
             const email_profesor = getTeacherEmail(String(gebi('swal2-input8')?.value));
             const id_auto = null;
@@ -93,7 +91,7 @@ async function CreateClaseTeorica(profesores, alumnos) {
                 ? Array.from(selectEl.selectedOptions).map(o => Number(o.value))
                 : [];
 
-            return { tipo: CLASE_TEORICA, descripcion, fecha_clase, hora_inicio, hora_fin, dia, estado_clase, email_profesor, id_auto, ids_alumnos };
+            return { tipo: CLASE_TEORICA, descripcion, fecha_clase, hora_inicio, hora_fin, estado_clase, email_profesor, id_auto, ids_alumnos };
         },
         theme: "light",
         customClass: {
@@ -117,7 +115,6 @@ async function CreateClasePractica(profesores, vehiculos, alumnos) {
             ${createSwalDateField(3, "fecha", "")} 
             ${createSwalField(4, "Hora de Inicio", "")}
             ${createSwalField(5, "Hora de Término", "")}
-            ${StaticDropdownList(DIAS_SEMANA, "Día", "swal2-input6", "m-1", true)}
             ${StaticDropdownList(ESTADO_CLASE, "Estado", "swal2-input7", "m-1", false)}
             ${StaticDropdownList(profesores, "Profesor", "swal2-input8", "m-1", false)}
             ${StaticDropdownList(
@@ -146,7 +143,6 @@ async function CreateClasePractica(profesores, vehiculos, alumnos) {
             const fecha_clase = gebi('swal2-input3')?.value;
             const hora_inicio = gebi('swal2-input4')?.value;
             const hora_fin = gebi('swal2-input5')?.value;
-            const dia = String(gebi('swal2-input6')?.value);
             const estado_clase = String(gebi('swal2-input7')?.value);
             const email_profesor = getTeacherEmail(String(gebi('swal2-input8')?.value));
             const patente_auto = String(gebi('swal2-input9')?.value);
@@ -170,7 +166,7 @@ async function CreateClasePractica(profesores, vehiculos, alumnos) {
             // Extraer email del alumno seleccionado (formato: "Nombre (email)")
             const email_alumno = getTeacherEmail(alumnoSeleccionado);
 
-            return { tipo: CLASE_PRACTICA, descripcion, fecha_clase, hora_inicio, hora_fin, dia, estado_clase, email_profesor, patente_auto, email_alumno };
+            return { tipo: CLASE_PRACTICA, descripcion, fecha_clase, hora_inicio, hora_fin, estado_clase, email_profesor, patente_auto, email_alumno };
         },
         theme: "light",
         customClass: {
