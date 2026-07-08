@@ -120,7 +120,15 @@ async function CreateClasePractica(profesores, vehiculos, alumnos) {
             ${StaticDropdownList(DIAS_SEMANA, "Día", "swal2-input6", "m-1", true)}
             ${StaticDropdownList(ESTADO_CLASE, "Estado", "swal2-input7", "m-1", false)}
             ${StaticDropdownList(profesores, "Profesor", "swal2-input8", "m-1", false)}
-            ${StaticDropdownList(vehiculos, "Vehículo (patente)", "swal2-input9", "m-1", false)}
+            ${StaticDropdownList(
+                Array.isArray(vehiculos)
+                    ? vehiculos.filter(v => (v.estado || "").toLowerCase() === "activo" || (v.estado || "").toLowerCase() === "disponible").map(v => v.patente)
+                    : [],
+                "Vehículo (patente)",
+                "swal2-input9",
+                "m-1",
+                false
+            )}
             ${StaticDropdownList(
                 Array.isArray(alumnos) ? alumnos.map(a => `${a.nombre} (${a.email})`) : [],
                 "Alumno (1 cupo)",
